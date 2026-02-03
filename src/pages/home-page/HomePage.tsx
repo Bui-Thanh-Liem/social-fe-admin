@@ -94,11 +94,11 @@ export function HomePage() {
 
       {/*  */}
       <div className="grid grid-cols-5 gap-x-4">
-        <div className="rounded-lg h-80 bg-amber-200"></div>
-        <div className="rounded-lg h-80 bg-sky-500 "></div>
-        <div className="rounded-lg h-80 bg-amber-200"></div>
-        <div className="rounded-lg h-80 bg-sky-500 "></div>
-        <div className="rounded-lg h-80 bg-amber-200"></div>
+        <div className="rounded-lg h-95 bg-amber-200"></div>
+        <div className="rounded-lg h-95 bg-sky-500 "></div>
+        <div className="rounded-lg h-95 bg-amber-200"></div>
+        <div className="rounded-lg h-95 bg-sky-500 "></div>
+        <div className="rounded-lg h-95 bg-amber-200"></div>
       </div>
     </div>
   );

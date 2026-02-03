@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { Header } from "~/components/Header";
-import { AppSidebar } from "~/components/ui/app-sidebar";
+import { AppSidebar } from "~/components/AppSidebar";
 import { SidebarProvider } from "~/components/ui/sidebar";
 
 export function DashboardLayout() {
@@ -14,6 +14,7 @@ export function DashboardLayout() {
         <div className="flex flex-1 flex-col">
           <Header />
 
+          {/* -4rem header height */}
           <main className="flex-1 p-4">
             <Outlet />
           </main>
