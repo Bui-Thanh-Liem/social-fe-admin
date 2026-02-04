@@ -1,13 +1,13 @@
-import React from "react";
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
+  PaginationEllipsis,
 } from "~/components/ui/pagination";
+
 import {
   Select,
   SelectContent,
@@ -16,65 +16,114 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
-import { Field, FieldLabel } from "./ui/field";
 
-export function Pagination_() {
-  // Giả sử logic quản lý state (thực tế bạn sẽ dùng từ URL hoặc useState)
-  const [pageSize, setPageSize] = React.useState("10");
+import { Field, FieldLabel } from "~/components/ui/field";
+import { getPaginationPages } from "~/utils/getPaginationPages";
+
+export interface PaginationProps {
+  total: number; // tổng số item
+  page: number; // trang hiện tại (1-based)
+  limit: number; // số item / trang
+  total_page: number; // TỔNG SỐ TRANG (backend trả về)
+  onChangePage?: (page: number) => void;
+  onChangeLimit?: (limit: number) => void;
+}
+
+export function Pagination_({
+  total,
+  page,
+  limit,
+  total_page,
+  onChangePage,
+  onChangeLimit,
+}: PaginationProps) {
+  const canPrev = page > 1;
+  const canNext = page < total_page;
+
+  const pages = getPaginationPages(page, total_page);
 
   return (
     <div className="fixed right-3 bottom-3 flex items-center justify-end gap-x-4">
-      {/* PHẦN 1: CHỌN SỐ ITEM TRÊN 1 TRANG */}
+      {/* ===== SELECT LIMIT ===== */}
       <Field orientation="horizontal" className="w-fit">
-        <FieldLabel htmlFor="select-rows-per-page">mục trên trang</FieldLabel>
-        <Select defaultValue="25">
+        <FieldLabel htmlFor="select-rows-per-page">Mục trên trang</FieldLabel>
+
+        <Select
+          value={limit.toString()}
+          onValueChange={(value) => onChangeLimit?.(Number(value))}
+        >
           <SelectTrigger className="w-20" id="select-rows-per-page">
             <SelectValue />
           </SelectTrigger>
           <SelectContent align="start">
             <SelectGroup>
-              <SelectItem value="10">10</SelectItem>
-              <SelectItem value="25">25</SelectItem>
-              <SelectItem value="50">50</SelectItem>
-              <SelectItem value="100">100</SelectItem>
+              {[50, 100, 150, 200].map((num) => (
+                <SelectItem key={num} value={num.toString()}>
+                  {num}
+                </SelectItem>
+              ))}
             </SelectGroup>
           </SelectContent>
         </Select>
       </Field>
 
-      {/* PHẦN 2: ĐIỀU HƯỚNG TRANG (PAGINATION) */}
+      {/*  */}
+      <FieldLabel htmlFor="select-rows-per-page">Tổng cộng {total}</FieldLabel>
+
+      {/* ===== PAGINATION ===== */}
       <Pagination className="mx-0 w-auto">
         <PaginationContent>
+          {/* PREVIOUS */}
           <PaginationItem>
-            {/* Sử dụng component gốc, text "Trước" sẽ được sửa trong file ui/pagination.tsx hoặc truyền trực tiếp nếu bạn đã tùy biến */}
             <PaginationPrevious
               href="#"
-              className="hover:bg-accent cursor-pointer"
+              className={
+                !canPrev
+                  ? "pointer-events-none opacity-50"
+                  : "cursor-pointer hover:bg-accent"
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                if (canPrev) onChangePage?.(page - 1);
+              }}
             />
           </PaginationItem>
 
-          <PaginationItem>
-            <PaginationLink href="#" isActive>
-              1
-            </PaginationLink>
-          </PaginationItem>
+          {/* PAGE NUMBERS */}
+          {pages.map((p, index) =>
+            p === "..." ? (
+              <PaginationItem key={`ellipsis-${index}`}>
+                <PaginationEllipsis />
+              </PaginationItem>
+            ) : (
+              <PaginationItem key={p}>
+                <PaginationLink
+                  href="#"
+                  isActive={p === page}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    onChangePage?.(p);
+                  }}
+                >
+                  {p}
+                </PaginationLink>
+              </PaginationItem>
+            ),
+          )}
 
-          <PaginationItem>
-            <PaginationLink href="#">2</PaginationLink>
-          </PaginationItem>
-
-          <PaginationItem>
-            <PaginationEllipsis />
-          </PaginationItem>
-
-          <PaginationItem>
-            <PaginationLink href="#">10</PaginationLink>
-          </PaginationItem>
-
+          {/* NEXT */}
           <PaginationItem>
             <PaginationNext
               href="#"
-              className="hover:bg-accent cursor-pointer"
+              className={
+                !canNext
+                  ? "pointer-events-none opacity-50"
+                  : "cursor-pointer hover:bg-accent"
+              }
+              onClick={(e) => {
+                e.preventDefault();
+                if (canNext) onChangePage?.(page + 1);
+              }}
             />
           </PaginationItem>
         </PaginationContent>
