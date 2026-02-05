@@ -11,7 +11,7 @@ export function RedirectIfNotAuthenticated({
 
   if (!admin) {
     // Xóa token
-    // return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   return children;

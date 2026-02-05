@@ -3,3 +3,9 @@ export enum EMediaStatus {
   Reject,
   Active,
 }
+
+export enum EAuthVerifyStatus {
+  Unverified,
+  Verified,
+  Banned,
+}

@@ -7,6 +7,7 @@ import { DashboardLayout } from "./layouts/DashboardLayout";
 import { HomePage } from "./pages/home-page/HomePage";
 import { MediaPage } from "./pages/media-page/MediaPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { UserPage } from "./pages/user-page/UserPage";
 
 // Router config
 const router = createBrowserRouter([
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
           {
             path: "/management/media",
             element: <MediaPage />,
+          },
+          {
+            path: "/management/users",
+            element: <UserPage />,
           },
         ],
       },

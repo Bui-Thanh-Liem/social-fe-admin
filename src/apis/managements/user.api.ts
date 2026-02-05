@@ -1,20 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import { apiCall } from "../callApi.util";
-import type { IMedia } from "~/shared/interfaces/media.interface";
 import type { IQuery } from "~/shared/interfaces/common/query.interface";
 import type { ResMultiType } from "~/shared/types/response.type";
 import { buildQueryString } from "~/utils/buildQueryString";
+import type { IUser } from "~/shared/interfaces/user.interface";
 
-export const useGetMultiMedia = (queries?: IQuery<IMedia>) => {
+export const useGetMultiUsers = (queries?: IQuery<IUser>) => {
   const normalizedQueries = queries ? JSON.stringify(queries) : "";
 
   return useQuery({
-    queryKey: ["admin", "media", queries?.q, normalizedQueries],
+    queryKey: ["admin", "users", queries?.q, normalizedQueries],
     queryFn: async () => {
       // Tạo query string từ queries object
       const queryString = queries ? buildQueryString(queries) : "";
-      const url = `/admin/media/${queryString ? `?${queryString}` : ""}`;
-      return apiCall<ResMultiType<IMedia>>(url);
+      const url = `/admin/users/${queryString ? `?${queryString}` : ""}`;
+      return apiCall<ResMultiType<IUser>>(url);
     },
 
     //

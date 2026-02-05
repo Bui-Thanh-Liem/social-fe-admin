@@ -11,3 +11,5 @@ export interface IMedia {
   user_id?: string;
   status: EMediaStatus;
 }
+
+export type IMediaBare = Pick<IMedia, "s3_key" | "url">;

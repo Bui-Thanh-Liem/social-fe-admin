@@ -1,15 +1,15 @@
-import { useEffect } from "react";
-import { useSearchParams } from "react-router-dom";
 import { Logo } from "../components/Logo";
 import { useForm } from "react-hook-form";
 import { InputMain } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
 import { Card, CardContent } from "~/components/ui/card";
+import { useLogin } from "~/apis/auth.api";
+import type { LoginAuthDto } from "~/shared/dtos/req/auth.dto";
+import { handleResponse } from "~/utils/toast";
 
 export function AuthLayout() {
-  // OAUTH
-  const [params] = useSearchParams();
-  const status = params.get("s") || "";
+  //
+  const apiLogin = useLogin();
 
   //
   const {
@@ -28,35 +28,15 @@ export function AuthLayout() {
     },
   });
 
-  // Handle OAuth login/signup
-  useEffect(() => {
-    async function onLoginOAuthSuccess() {
-      const access_token = params.get("access_token") || "";
-      const refresh_token = params.get("refresh_token") || "";
-
-      localStorage.setItem("access_token", access_token);
-      localStorage.setItem("refresh_token", refresh_token);
-
-      // Nếu đăng nhập thành công thì gọi api getMe lưu vào Store global
-      // const resGetMe = await getMe.mutateAsync();
-
-      //
-      // if (resGetMe.statusCode === 200 && resGetMe?.metadata) {
-      // setUser(resGetMe.metadata);
-      // }
-    }
-    if (["login", "signup"].includes(status)) onLoginOAuthSuccess();
-  }, [status]);
-
   //
   function onClickForgotPass() {
     // setOpenFormRegister(true);
   }
 
   //
-  function onSubmit() {
-    // const res = await apiLogin.mutateAsync(data);
-    // handleResponse(res, successForm);
+  async function onSubmit(data: LoginAuthDto) {
+    const res = await apiLogin.mutateAsync(data);
+    handleResponse(res);
   }
 
   return (
