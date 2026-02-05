@@ -4,10 +4,12 @@ import { RedirectIfAuthenticated } from "./components/RedirectIfAuthenticated";
 import { RedirectIfNotAuthenticated } from "./components/RedirectIfNotAuthenticated";
 import { AuthLayout } from "./layouts/AuthLayout";
 import { DashboardLayout } from "./layouts/DashboardLayout";
-import { HomePage } from "./pages/home-page/HomePage";
-import { MediaPage } from "./pages/media-page/MediaPage";
+import { HomePage } from "./pages/managemant/home-page/HomePage";
+import { MediaPage } from "./pages/managemant/media-page/MediaPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { UserPage } from "./pages/user-page/UserPage";
+import { UserPage } from "./pages/managemant/user-page/UserPage";
+import { CommunityPage } from "./pages/managemant/community-page/CommunityPage";
+import { TweetPage } from "./pages/managemant/tweet-page/TweetPage";
 
 // Router config
 const router = createBrowserRouter([
@@ -40,6 +42,14 @@ const router = createBrowserRouter([
           {
             path: "/management/users",
             element: <UserPage />,
+          },
+          {
+            path: "/management/tweets",
+            element: <TweetPage />,
+          },
+          {
+            path: "/management/communities",
+            element: <CommunityPage />,
           },
         ],
       },

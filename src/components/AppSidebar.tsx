@@ -16,6 +16,7 @@ import {
   LayoutDashboard,
   Newspaper,
   Users,
+  UsersRound,
   WholeWord,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
@@ -43,30 +44,22 @@ const managementMenuItems = [
   {
     label: "Bài viết",
     icon: <Newspaper />,
-    link: "/management/posts",
+    link: "/management/tweets",
   },
   {
-    label: "Phương tiện",
+    label: "Hình ảnh & Video",
     icon: <ImagePlay />,
     link: "/management/media",
+  },
+  {
+    label: "Cộng đồng",
+    icon: <UsersRound />,
+    link: "/management/communities",
   },
   {
     label: "Ngôn từ",
     icon: <WholeWord />,
     link: "/management/bad-words",
-  },
-];
-
-const reportMenuItems = [
-  {
-    label: "Người dùng",
-    icon: <Users />,
-    link: "/reports/users",
-  },
-  {
-    label: "Bài viết",
-    icon: <Newspaper />,
-    link: "/reports/posts",
   },
 ];
 
@@ -121,34 +114,6 @@ export function AppSidebar() {
           <SidebarGroupContent>
             <SidebarMenu>
               {managementMenuItems.map((item) => (
-                <SidebarMenuItem key={item.label}>
-                  <SidebarMenuButton
-                    tooltip={item.label}
-                    asChild
-                    isActive={pathname === item.link}
-                  >
-                    <Link to={item.link}>
-                      {item.icon}
-                      <span className="group-data-[collapsible=icon]:hidden">
-                        {item.label}
-                      </span>
-                    </Link>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-
-        {/* Báo cáo */}
-        <SidebarGroup>
-          <SidebarGroupLabel className="group-data-[collapsible=icon]:hidden">
-            Báo cáo / vi phạm
-          </SidebarGroupLabel>
-
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {reportMenuItems.map((item) => (
                 <SidebarMenuItem key={item.label}>
                   <SidebarMenuButton
                     tooltip={item.label}

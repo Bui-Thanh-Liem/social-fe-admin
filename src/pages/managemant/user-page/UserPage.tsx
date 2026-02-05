@@ -105,7 +105,7 @@ export function UserPage() {
   const [limit, setLimit] = useState(50);
 
   //
-  const { data, isLoading, error } = useGetMultiUsers({
+  const { data } = useGetMultiUsers({
     page: page.toString(),
     limit: limit.toString(),
   });
@@ -139,7 +139,7 @@ export function UserPage() {
 
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => onEdit(record)}>
-                  Chỉnh sửa
+                  Nhắc nhở
                 </DropdownMenuItem>
 
                 <DropdownMenuItem onClick={() => onEdit(record)}>
