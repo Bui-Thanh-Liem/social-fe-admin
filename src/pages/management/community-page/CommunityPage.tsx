@@ -1,8 +1,8 @@
 import { MoreHorizontalIcon } from "lucide-react";
 import { useState } from "react";
-import { useGetMultiTweets } from "~/apis/managements/tweet.api";
-import { VerifyIcon } from "~/components/icons/verify";
-import { Pagination_ } from "~/components/pagination";
+import { useGetMultiCommunities } from "~/apis/managements/communities.api";
+import { Filter } from "~/components/Filter";
+import { Pagination_ } from "~/components/Pagination";
 import { Table_, type Column } from "~/components/Table_";
 // import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
@@ -12,14 +12,30 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import type { ICommunity } from "~/shared/interfaces/community.interface";
 import type { IMediaBare } from "~/shared/interfaces/media.interface";
-import type { ITweet } from "~/shared/interfaces/tweet.interface";
-import type { IUser } from "~/shared/interfaces/user.interface";
-import { formatDateToDateVN } from "~/utils/date-time";
 
-export function TweetPage() {
+export function CommunityPage() {
   //
   const columns: Column[] = [
+    {
+      title: "Ảnh bìa",
+      dataIndex: "cover",
+      fixed: "left",
+      width: 100,
+      render: (value: IMediaBare, record: ICommunity) => (
+        <img
+          className="h-10 w-12 rounded"
+          src={value?.url || "/favicon.png"}
+          alt={record.name}
+        />
+      ),
+    },
+    {
+      title: "Tên cộng đồng",
+      dataIndex: "name",
+      width: 200,
+    },
     // {
     //   title: "Avatar",
     //   dataIndex: "avatar",
@@ -33,45 +49,10 @@ export function TweetPage() {
     //   ),
     // },
     {
-      title: "Hình ảnh và video",
-      dataIndex: "medias",
-      width: 100,
-      render: (value: IMediaBare[] | null) => (
-        <div>
-          {value && value.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              {value.map((media, index) => (
-                <div
-                  key={index}
-                  className="w-16 h-16 border rounded overflow-hidden"
-                >
-                  {media.s3_key?.startsWith("video/") ? (
-                    <video
-                      src={media.url}
-                      className="w-full h-full object-cover"
-                      controls
-                    />
-                  ) : (
-                    <img
-                      src={media.url}
-                      alt={`media-${index}`}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <span>-</span>
-          )}
-        </div>
-      ),
-    },
-    {
       title: "Nội dung",
       dataIndex: "content",
       width: 200,
-      render: (value: string) => <p className="line-clamp-1">{value}</p>,
+      render: (value: string) => <p className="line-clamp-1">{value || "-"}</p>,
     },
   ];
 
@@ -80,30 +61,34 @@ export function TweetPage() {
   const [limit, setLimit] = useState(50);
 
   //
-  const { data } = useGetMultiTweets({
+  const { data } = useGetMultiCommunities({
     page: page.toString(),
     limit: limit.toString(),
   });
-  const tweets = data?.metadata?.items || [];
+  const communities = data?.metadata?.items || [];
   const total_page = data?.metadata?.total_page || 0;
   const total = data?.metadata?.total || 0;
 
   //
-  const onEdit = (record: ITweet) => {
-    console.log("Edit tweet:", record);
+  const onEdit = (record: ICommunity) => {
+    console.log("Edit community:", record);
   };
 
   //
-  const onDelete = (record: ITweet) => {
-    console.log("Delete tweet:", record);
+  const onDelete = (record: ICommunity) => {
+    console.log("Delete community:", record);
   };
 
   return (
     <div>
-      <div className="max-h-[calc(100vh-9rem)] overflow-y-auto pr-1">
+      {/*  */}
+      <Filter />
+
+      {/*  */}
+      <div className="max-h-[calc(100vh-13rem)] overflow-y-auto pr-1">
         <Table_
           columns={columns}
-          dataSource={tweets}
+          dataSource={communities}
           renderActions={(record) => (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -115,10 +100,6 @@ export function TweetPage() {
               <DropdownMenuContent align="end">
                 <DropdownMenuItem onClick={() => onEdit(record)}>
                   Nhắc nhở
-                </DropdownMenuItem>
-
-                <DropdownMenuItem onClick={() => onEdit(record)}>
-                  Gỡ bài viết
                 </DropdownMenuItem>
 
                 {record.status !== "deleted" && (
@@ -134,6 +115,8 @@ export function TweetPage() {
           )}
         />
       </div>
+
+      {/*  */}
       <Pagination_
         total={total}
         total_page={total_page}

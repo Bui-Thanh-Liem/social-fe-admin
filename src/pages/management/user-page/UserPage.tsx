@@ -1,8 +1,9 @@
 import { MoreHorizontalIcon } from "lucide-react";
 import { useState } from "react";
 import { useGetMultiUsers } from "~/apis/managements/user.api";
+import { Filter } from "~/components/Filter";
 import { VerifyIcon } from "~/components/icons/verify";
-import { Pagination_ } from "~/components/pagination";
+import { Pagination_ } from "~/components/Pagination";
 import { Table_, type Column } from "~/components/Table_";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
@@ -125,7 +126,11 @@ export function UserPage() {
 
   return (
     <div>
-      <div className="max-h-[calc(100vh-9rem)] overflow-y-auto pr-1">
+      {/*  */}
+      <Filter />
+
+      {/*  */}
+      <div className="max-h-[calc(100vh-13rem)] overflow-y-auto pr-1">
         <Table_
           columns={columns}
           dataSource={users}
@@ -159,6 +164,8 @@ export function UserPage() {
           )}
         />
       </div>
+
+      {/*  */}
       <Pagination_
         total={total}
         total_page={total_page}

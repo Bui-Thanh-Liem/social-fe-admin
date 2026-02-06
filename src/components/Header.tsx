@@ -22,7 +22,7 @@ export function Header() {
 
         <BellRing size={20} />
         <Avatar>
-          <AvatarImage src="https://github.com/shadcn.png" />
+          <AvatarImage src="/favicon.png" />
           <AvatarFallback>CN</AvatarFallback>
         </Avatar>
       </div>

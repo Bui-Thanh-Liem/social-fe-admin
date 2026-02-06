@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { MoreHorizontalIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import {
@@ -55,7 +56,7 @@ export function Table_({
   const hasAction = !!renderActions;
 
   return (
-    <div className="relative overflow-x-auto">
+    <div className="relative overflow-x-auto rounded-md border px-2">
       <Table className="table-fixed w-full">
         {/* ================= HEADER ================= */}
         <TableHeader>

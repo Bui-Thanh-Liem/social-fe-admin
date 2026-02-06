@@ -1,7 +1,8 @@
 import { ClipboardClock, Eye, Trash } from "lucide-react";
 import { useState } from "react";
 import { useGetMultiMedia } from "~/apis/managements/media.api";
-import { Pagination_ } from "~/components/pagination";
+import { Filter } from "~/components/Filter";
+import { Pagination_ } from "~/components/Pagination";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -231,7 +232,11 @@ export function MediaPage() {
 
   return (
     <div className="h-full">
-      <div className="grid grid-cols-10 gap-4 max-h-[calc(100vh-9rem)] overflow-y-auto pr-1">
+      {/*  */}
+      <Filter />
+
+      {/*  */}
+      <div className="grid grid-cols-10 gap-4 max-h-[calc(100vh-13rem)] overflow-y-auto pr-1">
         {medias.map((media) => (
           <div
             key={media.s3_key}
@@ -241,6 +246,8 @@ export function MediaPage() {
           </div>
         ))}
       </div>
+
+      {/*  */}
       <Pagination_
         total={total}
         total_page={total_page}

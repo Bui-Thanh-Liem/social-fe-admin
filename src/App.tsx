@@ -4,12 +4,13 @@ import { RedirectIfAuthenticated } from "./components/RedirectIfAuthenticated";
 import { RedirectIfNotAuthenticated } from "./components/RedirectIfNotAuthenticated";
 import { AuthLayout } from "./layouts/AuthLayout";
 import { DashboardLayout } from "./layouts/DashboardLayout";
-import { HomePage } from "./pages/managemant/home-page/HomePage";
-import { MediaPage } from "./pages/managemant/media-page/MediaPage";
+import { HomePage } from "./pages/management/home-page/HomePage";
+import { MediaPage } from "./pages/management/media-page/MediaPage";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { UserPage } from "./pages/managemant/user-page/UserPage";
-import { CommunityPage } from "./pages/managemant/community-page/CommunityPage";
-import { TweetPage } from "./pages/managemant/tweet-page/TweetPage";
+import { UserPage } from "./pages/management/user-page/UserPage";
+import { CommunityPage } from "./pages/management/community-page/CommunityPage";
+import { TweetPage } from "./pages/management/tweet-page/TweetPage";
+import { BadWordsPage } from "./pages/management/bad-wrods-page/BadWordsPage";
 
 // Router config
 const router = createBrowserRouter([
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
           {
             path: "/management/communities",
             element: <CommunityPage />,
+          },
+          {
+            path: "/management/bad-words",
+            element: <BadWordsPage />,
           },
         ],
       },
