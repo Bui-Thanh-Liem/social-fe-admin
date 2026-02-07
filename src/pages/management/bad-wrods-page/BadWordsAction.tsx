@@ -15,7 +15,7 @@ import { Field, FieldError, FieldLabel } from "~/components/ui/field";
 import { Input } from "~/components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 
-import { EPriorityBadWord } from "~/shared/enums/common.enum";
+import { EActionBadWord, EPriorityBadWord } from "~/shared/enums/common.enum";
 import {
   Select,
   SelectContent,
@@ -53,6 +53,7 @@ export function BadWordsAction({ _id, editData }: BadWordsActionProps) {
       words: "",
       replace_with: "",
       priority: EPriorityBadWord.Low,
+      action: EActionBadWord.Warn,
     },
   });
 
@@ -145,6 +146,28 @@ export function BadWordsAction({ _id, editData }: BadWordsActionProps) {
                       {Object.values(EPriorityBadWord).map((priority) => (
                         <SelectItem key={priority} value={priority}>
                           {priority}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="action"
+              control={form.control}
+              render={({ field }) => (
+                <Field orientation="responsive">
+                  <FieldLabel>Hành động</FieldLabel>
+                  <Select value={field.value} onValueChange={field.onChange}>
+                    <SelectTrigger className="min-w-30">
+                      <SelectValue placeholder="Chọn hành động" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(EActionBadWord).map((action) => (
+                        <SelectItem key={action} value={action}>
+                          {action}
                         </SelectItem>
                       ))}
                     </SelectContent>
