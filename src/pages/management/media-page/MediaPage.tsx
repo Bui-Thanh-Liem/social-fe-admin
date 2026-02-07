@@ -73,11 +73,11 @@ function MediaItem({ media }: { media: IMedia }) {
   const [openDelete, setOpenDelete] = useState(false);
   const [openDetail, setOpenDetail] = useState(false);
 
-  //
-  function handleDelete() {}
+  // //
+  // function handleDelete() {}
 
-  //
-  function handleViewDetail() {}
+  // //
+  // function handleViewDetail() {}
 
   //
   function handleRemind() {
@@ -222,7 +222,7 @@ export function MediaPage() {
   const [limit, setLimit] = useState(50);
 
   //
-  const { data, isLoading, error } = useGetMultiMedia({
+  const { data } = useGetMultiMedia({
     page: page.toString(),
     limit: limit.toString(),
   });

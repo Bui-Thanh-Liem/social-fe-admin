@@ -19,8 +19,10 @@ import {
 
 import { Field, FieldLabel } from "~/components/ui/field";
 import { getPaginationPages } from "~/utils/getPaginationPages";
+import { cn } from "~/lib/utils";
 
 export interface PaginationProps {
+  isCss?: boolean;
   total: number; // tổng số item
   page: number; // trang hiện tại (1-based)
   limit: number; // số item / trang
@@ -30,6 +32,7 @@ export interface PaginationProps {
 }
 
 export function Pagination_({
+  isCss = true,
   total,
   page,
   limit,
@@ -43,7 +46,12 @@ export function Pagination_({
   const pages = getPaginationPages(page, total_page);
 
   return (
-    <div className="fixed right-3 bottom-3 flex items-center justify-end gap-x-4">
+    <div
+      className={cn(
+        "fixed right-3 bottom-3 flex items-center justify-end gap-x-4",
+        !isCss && "static",
+      )}
+    >
       {/* ===== SELECT LIMIT ===== */}
       <Field orientation="horizontal" className="w-fit">
         <FieldLabel htmlFor="select-rows-per-page">Mục trên trang</FieldLabel>

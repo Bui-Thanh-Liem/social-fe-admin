@@ -18,6 +18,15 @@ import { BadWordsAction } from "./BadWordsAction";
 import { EPriorityBadWord } from "~/shared/enums/common.enum";
 import { cn } from "~/lib/utils";
 import { Badge } from "~/components/ui/badge";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "~/components/ui/select";
+import { Input } from "~/components/ui/input";
+import { useDebounce } from "~/hooks/useDebounce";
 
 //
 function StatusBadge({ status }: { status: EPriorityBadWord }) {
@@ -39,11 +48,16 @@ function StatusBadge({ status }: { status: EPriorityBadWord }) {
 
 export function BadWordsPage() {
   //
+  const [searchValue, setSearchValue] = useState("");
+  const debouncedSearchValue = useDebounce(searchValue, 800);
+
+  //
   const columns: Column[] = [
     {
       title: "Từ cấm",
       dataIndex: "words",
-      width: 100,
+      width: 150,
+      render: (value: string) => <p className="banned-word">{value}</p>,
     },
     {
       title: "Kí tự thay thế",
@@ -51,9 +65,9 @@ export function BadWordsPage() {
       width: 150,
     },
     {
-      title: "Mức độ ưu tiên",
+      title: "Mức độ",
       dataIndex: "priority",
-      width: 150,
+      width: 100,
       render: (value: EPriorityBadWord) => <StatusBadge status={value} />,
     },
   ];
@@ -70,6 +84,7 @@ export function BadWordsPage() {
   const { data } = useGetMultiBadWords({
     page: page.toString(),
     limit: limit.toString(),
+    q: debouncedSearchValue,
   });
   const badWords = data?.metadata?.items || [];
   const total_page = data?.metadata?.total_page || 0;
@@ -86,12 +101,34 @@ export function BadWordsPage() {
     apiDelete.mutate(record._id);
   };
 
+  //
+  function onchangePriority(value: EPriorityBadWord) {
+    console.log("Selected priority:", value);
+  }
+
   return (
     <div className="grid grid-cols-3 gap-x-4">
       <div>
         {/*  */}
-        <div>
+        <div className="flex items-center gap-x-4">
           <BadWordsAction editData={editData} _id={editData?._id} />
+          <Input
+            placeholder="Nhập từ"
+            value={searchValue}
+            onChange={(e) => setSearchValue(e.target.value)}
+          />
+          <Select value={undefined} onValueChange={onchangePriority}>
+            <SelectTrigger className="min-w-30">
+              <SelectValue placeholder="Chọn mức độ" />
+            </SelectTrigger>
+            <SelectContent>
+              {Object.values(EPriorityBadWord).map((priority) => (
+                <SelectItem key={priority} value={priority}>
+                  {priority}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
         </div>
 
         {/*  */}
@@ -127,14 +164,17 @@ export function BadWordsPage() {
         </div>
 
         {/*  */}
-        <Pagination_
-          total={total}
-          total_page={total_page}
-          page={page}
-          onChangePage={setPage}
-          limit={limit}
-          onChangeLimit={setLimit}
-        />
+        <div className="py-3">
+          <Pagination_
+            isCss={false}
+            total={total}
+            total_page={total_page}
+            page={page}
+            onChangePage={setPage}
+            limit={limit}
+            onChangeLimit={setLimit}
+          />
+        </div>
       </div>
       <div className="border rounded-md p-3">
         <p className="mb-2">Bị sử dụng gần đây nhất</p>

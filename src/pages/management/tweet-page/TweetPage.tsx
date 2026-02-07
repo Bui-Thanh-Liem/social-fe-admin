@@ -2,7 +2,7 @@ import { MoreHorizontalIcon } from "lucide-react";
 import { useState } from "react";
 import { useGetMultiTweets } from "~/apis/managements/tweet.api";
 import { Filter } from "~/components/Filter";
-import { VerifyIcon } from "~/components/icons/verify";
+// import { VerifyIcon } from "~/components/icons/verify";
 import { Pagination_ } from "~/components/Pagination";
 import { Table_, type Column } from "~/components/Table_";
 // import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
@@ -15,8 +15,8 @@ import {
 } from "~/components/ui/dropdown-menu";
 import type { IMediaBare } from "~/shared/interfaces/media.interface";
 import type { ITweet } from "~/shared/interfaces/tweet.interface";
-import type { IUser } from "~/shared/interfaces/user.interface";
-import { formatDateToDateVN } from "~/utils/date-time";
+// import type { IUser } from "~/shared/interfaces/user.interface";
+// import { formatDateToDateVN } from "~/utils/date-time";
 
 export function TweetPage() {
   //

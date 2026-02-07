@@ -178,4 +178,15 @@
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+  .banned-word {
+    filter: blur(2px);
+    transition: filter 0.3s ease;
+    cursor: pointer;
+    user-select: none; /* Ngăn copy nếu cần */
+  }
+
+  /* Khi di chuột vào sẽ hiện rõ */
+  .banned-word:hover {
+    filter: blur(0);
+  }
 }
