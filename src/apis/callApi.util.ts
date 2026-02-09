@@ -7,6 +7,7 @@ const apiUrl = import.meta.env.VITE_SERVER_API_URL;
 
 export const apiCall = async <T>(
   endpoint: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: any = {},
   isClientId: boolean = false
 ): Promise<OkResponse<T>> => {

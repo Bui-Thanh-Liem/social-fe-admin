@@ -1,5 +1,5 @@
 import z from "zod";
-import { EPriorityBadWord } from "~/shared/enums/common.enum";
+import { EActionBadWord, EPriorityBadWord } from "~/shared/enums/common.enum";
 
 export const ActionBadWordDtoSchema = z.object({
   words: z
@@ -13,6 +13,7 @@ export const ActionBadWordDtoSchema = z.object({
     .max(50, "Tối đa 50 kí tự")
     .trim(),
   priority: z.nativeEnum(EPriorityBadWord),
+  action: z.nativeEnum(EActionBadWord),
 });
 
 export type ActionBadWordDto = z.infer<typeof ActionBadWordDtoSchema>;
