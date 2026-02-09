@@ -82,3 +82,27 @@ export const useGetMultiBadWords = (queries?: IQuery<IBadWord>) => {
     networkMode: "online",
   });
 };
+
+// 🚪 GET - bad words most used
+export const useGetMultiBadWordMostUsed = (queries?: IQuery<IBadWord>) => {
+  const normalizedQueries = queries ? JSON.stringify(queries) : "";
+
+  return useQuery({
+    queryKey: ["admin", "bad-words", queries?.q, normalizedQueries],
+    queryFn: async () => {
+      // Tạo query string từ queries object
+      const queryString = queries ? buildQueryString(queries) : "";
+      const url = `/bad-words/most-used${queryString ? `?${queryString}` : ""}`;
+      return apiCall<ResMultiType<IBadWord>>(url);
+    },
+
+    //
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
+    refetchOnReconnect: false,
+    refetchInterval: false,
+    networkMode: "online",
+  });
+};

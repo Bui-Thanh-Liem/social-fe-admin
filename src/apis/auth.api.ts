@@ -14,7 +14,7 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: (credentials: LoginAuthDto) =>
-      apiCall<ResLogin>("/auth/login-admin", {
+      apiCall<ResLogin>("/admin/login", {
         method: "POST",
         body: JSON.stringify(credentials),
       }),
@@ -45,7 +45,7 @@ export const useLogin = () => {
 // 🚪 GET - Get Me
 export const useGetMe = () => {
   return useMutation({
-    mutationFn: () => apiCall<IAdmin>("/auth/me-admin", { method: "GET" }),
+    mutationFn: () => apiCall<IAdmin>("/admin/me", { method: "GET" }),
     onSuccess: () => {},
   });
 };

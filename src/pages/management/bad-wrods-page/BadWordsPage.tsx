@@ -16,8 +16,6 @@ import {
 import type { IBadWord } from "~/shared/interfaces/bad-words.interface";
 import { BadWordsAction } from "./BadWordsAction";
 import { EPriorityBadWord } from "~/shared/enums/common.enum";
-import { cn } from "~/lib/utils";
-import { Badge } from "~/components/ui/badge";
 import {
   Select,
   SelectContent,
@@ -27,24 +25,8 @@ import {
 } from "~/components/ui/select";
 import { Input } from "~/components/ui/input";
 import { useDebounce } from "~/hooks/useDebounce";
-
-//
-function StatusBadge({ status }: { status: EPriorityBadWord }) {
-  return (
-    <Badge
-      className={cn(
-        "",
-        status === EPriorityBadWord.High
-          ? "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300"
-          : status === EPriorityBadWord.Medium
-            ? "bg-blue-50 text-blue-700 dark:bg-blue-950 dark:text-blue-300"
-            : "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300",
-      )}
-    >
-      {status}
-    </Badge>
-  );
-}
+import { StatusBadge } from "./StatusBadge";
+import { MostUsed } from "./MostUsed";
 
 export function BadWordsPage() {
   //
@@ -177,8 +159,9 @@ export function BadWordsPage() {
         </div>
       </div>
       <div className="border rounded-md p-3">
-        <p className="mb-2">Bị sử dụng gần đây nhất</p>
+        <p className="mb-2">Sử dụng nhiều nhất</p>
         <hr />
+        <MostUsed />
       </div>
       <div className="border rounded-md p-3">
         <p className="mb-2">Người dùng sử dụng nhiều nhất</p>
