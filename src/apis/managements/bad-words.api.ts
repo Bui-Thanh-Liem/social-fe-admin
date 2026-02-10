@@ -5,6 +5,7 @@ import type { ResMultiType } from "~/shared/types/response.type";
 import { buildQueryString } from "~/utils/buildQueryString";
 import type { IBadWord } from "~/shared/interfaces/bad-words.interface";
 import type { ActionBadWordDto } from "~/shared/dtos/req/badword.dto";
+import type { IUserViolation } from "~/shared/interfaces/user-violations.interface";
 
 // 🔐 POST - bad words
 export const useCreateBadWords = () => {
@@ -94,6 +95,30 @@ export const useGetMultiBadWordMostUsed = (queries?: IQuery<IBadWord>) => {
       const queryString = queries ? buildQueryString(queries) : "";
       const url = `/bad-words/most-used${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<IBadWord>>(url);
+    },
+
+    //
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: true,
+    refetchOnMount: "always",
+    refetchOnReconnect: false,
+    refetchInterval: false,
+    networkMode: "online",
+  });
+};
+
+// 🚪 GET - user violations
+export const useGetMultiUserViolations = (queries?: IQuery<IUserViolation>) => {
+  const normalizedQueries = queries ? JSON.stringify(queries) : "";
+
+  return useQuery({
+    queryKey: ["admin", "user-violations", queries?.q, normalizedQueries],
+    queryFn: async () => {
+      // Tạo query string từ queries object
+      const queryString = queries ? buildQueryString(queries) : "";
+      const url = `/user-violations${queryString ? `?${queryString}` : ""}`;
+      return apiCall<ResMultiType<IUserViolation>>(url);
     },
 
     //
