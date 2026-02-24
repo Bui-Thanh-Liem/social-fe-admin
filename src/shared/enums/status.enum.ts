@@ -11,9 +11,9 @@ export enum EAuthVerifyStatus {
 }
 
 export enum ETweetStatus {
-  Pending,
-  Reject,
-  Ready,
+  Pending = "Chờ duyệt",
+  Reject = "Từ chối",
+  Ready = "Sẵn sàng",
 }
 
 export enum EInvitationStatus {

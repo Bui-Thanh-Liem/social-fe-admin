@@ -12,4 +12,4 @@ export interface IMedia {
   status: EMediaStatus;
 }
 
-export type IMediaBare = Pick<IMedia, "s3_key" | "url">;
+export type IMediaBare = Pick<IMedia, "s3_key" | "url" | "file_type">;

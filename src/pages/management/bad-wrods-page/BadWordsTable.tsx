@@ -65,9 +65,9 @@ export function BadWordsTable() {
 
   //
   const { data, refetch, isLoading, isFetching } = useGetMultiBadWords({
+    q: q,
     page: page,
     limit: limit,
-    q: q,
     qf: JSON.parse(qf),
   });
   const badWords = data?.metadata?.items || [];
