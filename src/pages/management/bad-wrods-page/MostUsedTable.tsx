@@ -10,19 +10,19 @@ export function MostUsedTable() {
     {
       title: "Từ cấm",
       dataIndex: "words",
-      width: 150,
+      width: 280,
       render: (value: string) => <p className="banned-word">{value}</p>,
     },
     {
       title: "Số lần sử dụng",
       dataIndex: "usage_count",
-      width: 100,
+      width: 200,
       render: (value: string) => <p>{value}</p>,
     },
     {
       title: "Mức độ",
       dataIndex: "priority",
-      width: 100,
+      width: 300,
       render: (value: EPriorityBadWord) => <StatusBadge status={value} />,
     },
   ];

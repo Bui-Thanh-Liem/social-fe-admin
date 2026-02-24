@@ -7,14 +7,6 @@ import {
 } from "~/apis/managements/bad-words.api";
 import { useState } from "react";
 import { BadWordsAction } from "./BadWordsAction";
-import { Input } from "~/components/ui/input";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "~/components/ui/select";
 import { Table_, type Column } from "~/components/Table_";
 import {
   DropdownMenu,
@@ -25,26 +17,23 @@ import {
 import { Button } from "~/components/ui/button";
 import { MoreHorizontalIcon } from "lucide-react";
 import { Pagination_ } from "~/components/Pagination";
-import { useDebounce } from "~/hooks/useDebounce";
 import { ReloadData } from "~/components/ReloadData";
+import { useSearchParams } from "react-router-dom";
+import { Filter } from "~/components/Filter";
 
 export function BadWordsTable() {
-  //
-  const [searchValue, setSearchValue] = useState("");
-  const debouncedSearchValue = useDebounce(searchValue, 800);
-
   //
   const columns: Column[] = [
     {
       title: "Từ cấm",
       dataIndex: "words",
-      width: 150,
+      width: 250,
       render: (value: string) => <p className="banned-word">{value}</p>,
     },
     {
       title: "Kí tự thay thế",
       dataIndex: "replace_with",
-      width: 150,
+      width: 250,
     },
     {
       title: "Mức độ",
@@ -55,24 +44,31 @@ export function BadWordsTable() {
     {
       title: "Hành động",
       dataIndex: "action",
-      width: 100,
       render: (value: EActionBadWord) => <ActionBadge action={value} />,
     },
   ];
 
   //
+  const [params] = useSearchParams();
+  const { page, limit, q, qf } = {
+    q: params.get("q") || "",
+    page: params.get("page") || "1",
+    qf: params.get("qf") || "[]",
+    limit: params.get("limit") || "50",
+  };
+
+  //
   const apiDelete = useDeleteBadWords();
 
   //
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(50);
   const [editData, setEditData] = useState<IBadWord | undefined>(undefined);
 
   //
   const { data, refetch, isLoading, isFetching } = useGetMultiBadWords({
-    page: page.toString(),
-    limit: limit.toString(),
-    q: debouncedSearchValue,
+    page: page,
+    limit: limit,
+    q: q,
+    qf: JSON.parse(qf),
   });
   const badWords = data?.metadata?.items || [];
   const total_page = data?.metadata?.total_page || 0;
@@ -85,62 +81,37 @@ export function BadWordsTable() {
 
   //
   const onDelete = (record: IBadWord) => {
-    console.log("Delete bad word:", record);
     apiDelete.mutate(record._id);
   };
-
-  //
-  function onchangePriority(value: EPriorityBadWord) {
-    console.log("Selected priority:", value);
-  }
-
-  //
-  function onchangeAction(value: EActionBadWord) {
-    console.log("Selected action:", value);
-  }
 
   return (
     <div>
       {/*  */}
-      <div className="flex items-center gap-x-4 pr-3.5">
-        <BadWordsAction editData={editData} _id={editData?._id} />
-        <Input
-          placeholder="Nhập từ"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-        <Select value={undefined} onValueChange={onchangePriority}>
-          <SelectTrigger className="min-w-30">
-            <SelectValue placeholder="Chọn mức độ" />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.values(EPriorityBadWord).map((priority) => (
-              <SelectItem key={priority} value={priority}>
-                {priority}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <Select value={undefined} onValueChange={onchangeAction}>
-          <SelectTrigger className="min-w-30">
-            <SelectValue placeholder="Chọn hành động" />
-          </SelectTrigger>
-          <SelectContent>
-            {Object.values(EActionBadWord).map((action) => (
-              <SelectItem key={action} value={action}>
-                {action}
-              </SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        <ReloadData
-          onClick={() => refetch()}
-          isLoading={isLoading || isFetching}
-        />
-      </div>
+      <Filter
+        action={<BadWordsAction editData={editData} _id={editData?._id} />}
+        reload={
+          <ReloadData
+            onClick={() => refetch()}
+            isLoading={isLoading || isFetching}
+          />
+        }
+        placeholderSearch="Nhập từ cấm..."
+        filters={[
+          {
+            key: "priority",
+            placeholder: "mức độ",
+            values: Object.values(EPriorityBadWord),
+          },
+          {
+            key: "action",
+            placeholder: "hành động",
+            values: Object.values(EActionBadWord),
+          },
+        ]}
+      />
 
       {/*  */}
-      <div className="max-h-[calc(100vh-13rem)] overflow-y-auto pr-1 mt-3">
+      <div className="max-h-[calc(100vh-14.4rem)] overflow-y-auto pr-1 mt-3">
         <Table_
           columns={columns}
           dataSource={badWords}
@@ -173,15 +144,7 @@ export function BadWordsTable() {
 
       {/*  */}
       <div className="py-3">
-        <Pagination_
-          isCss={false}
-          total={total}
-          total_page={total_page}
-          page={page}
-          onChangePage={setPage}
-          limit={limit}
-          onChangeLimit={setLimit}
-        />
+        <Pagination_ isCss={false} total={total} total_page={total_page} />
       </div>
     </div>
   );

@@ -6,7 +6,7 @@ export const buildQueryString = <T>(queries: IQuery<T>): string => {
 
   Object.entries(queries).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
-      if (key === "sort" && typeof value === "object") {
+      if (typeof value === "object") {
         params.append(key, JSON.stringify(value));
       } else {
         params.append(key, String(value));

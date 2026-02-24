@@ -1,6 +1,11 @@
-import type { EAuthVerifyStatus } from "../enums/status.enum";
+import type { EAuthVerifyStatus, EUserStatus } from "../enums/status.enum";
 import type { IBase } from "./base.interface";
 import type { IMediaBare } from "./media.interface";
+
+export interface IUserStatus {
+  status: EUserStatus;
+  reason: string;
+}
 
 export interface IUser extends IBase {
   name: string;

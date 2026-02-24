@@ -69,6 +69,8 @@ export const useGetMultiBadWords = (queries?: IQuery<IBadWord>) => {
     queryFn: async () => {
       // Tạo query string từ queries object
       const queryString = queries ? buildQueryString(queries) : "";
+      console.log("queryString:::", queryString);
+
       const url = `/bad-words/${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<IBadWord>>(url);
     },

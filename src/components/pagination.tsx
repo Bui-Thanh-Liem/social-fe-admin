@@ -20,30 +20,64 @@ import {
 import { Field, FieldLabel } from "~/components/ui/field";
 import { getPaginationPages } from "~/utils/getPaginationPages";
 import { cn } from "~/lib/utils";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 export interface PaginationProps {
   isCss?: boolean;
   total: number; // tổng số item
-  page: number; // trang hiện tại (1-based)
-  limit: number; // số item / trang
   total_page: number; // TỔNG SỐ TRANG (backend trả về)
-  onChangePage?: (page: number) => void;
-  onChangeLimit?: (limit: number) => void;
 }
 
 export function Pagination_({
   isCss = true,
   total,
-  page,
-  limit,
   total_page,
-  onChangePage,
-  onChangeLimit,
 }: PaginationProps) {
+  //
+  const [params] = useSearchParams();
+  const navigate = useNavigate();
+  const { pathname } = useLocation();
+  const { page, limit } = {
+    page: Number(params.get("page") || 1),
+    limit: Number(params.get("limit") || 50),
+  };
+
+  //
   const canPrev = page > 1;
   const canNext = page < total_page;
-
   const pages = getPaginationPages(page, total_page);
+
+  //
+  function handleChangePage(page: number) {
+    const newParams = new URLSearchParams(params);
+
+    if (page) {
+      newParams.set("page", page.toString());
+    } else {
+      newParams.delete("page");
+    }
+
+    navigate({
+      pathname,
+      search: newParams.toString(),
+    });
+  }
+
+  //
+  function handleChangeLimit(limit: number) {
+    const newParams = new URLSearchParams(params);
+
+    if (page) {
+      newParams.set("limit", limit.toString());
+    } else {
+      newParams.delete("limit");
+    }
+
+    navigate({
+      pathname,
+      search: newParams.toString(),
+    });
+  }
 
   return (
     <div
@@ -58,7 +92,7 @@ export function Pagination_({
 
         <Select
           value={limit.toString()}
-          onValueChange={(value) => onChangeLimit?.(Number(value))}
+          onValueChange={(value) => handleChangeLimit(Number(value))}
         >
           <SelectTrigger className="w-20" id="select-rows-per-page">
             <SelectValue />
@@ -92,7 +126,7 @@ export function Pagination_({
               }
               onClick={(e) => {
                 e.preventDefault();
-                if (canPrev) onChangePage?.(page - 1);
+                if (canPrev) handleChangePage(page - 1);
               }}
             />
           </PaginationItem>
@@ -110,7 +144,7 @@ export function Pagination_({
                   isActive={p === page}
                   onClick={(e) => {
                     e.preventDefault();
-                    onChangePage?.(p);
+                    handleChangePage(p);
                   }}
                 >
                   {p}
@@ -130,7 +164,7 @@ export function Pagination_({
               }
               onClick={(e) => {
                 e.preventDefault();
-                if (canNext) onChangePage?.(page + 1);
+                if (canNext) handleChangePage(page + 1);
               }}
             />
           </PaginationItem>

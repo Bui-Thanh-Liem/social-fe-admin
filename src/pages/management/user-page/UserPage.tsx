@@ -1,11 +1,13 @@
 import { MoreHorizontalIcon } from "lucide-react";
-import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useGetMultiUsers } from "~/apis/managements/user.api";
 import { Filter } from "~/components/Filter";
 import { VerifyIcon } from "~/components/icons/verify";
 import { Pagination_ } from "~/components/Pagination";
+import { ReloadData } from "~/components/ReloadData";
 import { Table_, type Column } from "~/components/Table_";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -14,9 +16,30 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Textarea } from "~/components/ui/textarea";
+import { cn } from "~/lib/utils";
+import { EUserStatus } from "~/shared/enums/status.enum";
 import type { IMediaBare } from "~/shared/interfaces/media.interface";
-import type { IUser } from "~/shared/interfaces/user.interface";
+import type { IUser, IUserStatus } from "~/shared/interfaces/user.interface";
 import { formatDateToDateVN } from "~/utils/date-time";
+
+export function StatusBadge({ status, reason }: IUserStatus) {
+  return (
+    <>
+      <Badge
+        className={cn(
+          "",
+          status === EUserStatus.Active
+            ? "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"
+            : status === EUserStatus.Block
+              ? "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300"
+              : "bg-black-50 text-black-700 dark:bg-black-950 dark:text-black-300",
+        )}
+      >
+        {`${status} ${reason && "- " + reason}`}
+      </Badge>
+    </>
+  );
+}
 
 export function UserPage() {
   //
@@ -25,7 +48,6 @@ export function UserPage() {
       title: "Avatar",
       dataIndex: "avatar",
       fixed: "left",
-      width: 80,
       render: (value: IMediaBare, record: IUser) => (
         <Avatar>
           <AvatarImage src={value?.url || "/favicon.png"} />
@@ -37,7 +59,6 @@ export function UserPage() {
       title: "Ảnh bìa",
       dataIndex: "cover_photo",
       fixed: "left",
-      width: 100,
       render: (value: IMediaBare, record: IUser) => (
         <img
           className="h-10 w-12 rounded"
@@ -47,28 +68,37 @@ export function UserPage() {
       ),
     },
     {
-      title: "Tên người dùng",
+      title: "Tên",
       dataIndex: "name",
+      width: 200,
       render: (value: boolean, record: IUser) => (
-        <div className="flex items-center gap-x-2">
-          {value} <VerifyIcon active={!!record.verify} size={20} />
+        <>
+          <div className="flex items-center gap-x-2">
+            <p className="max-w-40 line-clamp-1">{value}</p>{" "}
+            <VerifyIcon active={!!record.verify} size={20} />
+          </div>
+          <p>{record.username}</p>
+        </>
+      ),
+    },
+    {
+      title: "Email và ngày sinh",
+      dataIndex: "email",
+      width: 250,
+      render: (value: string, user: IUser) => (
+        <div>
+          <p className="line-clamp-1">{value}</p>
+          <p>{formatDateToDateVN(new Date(user.day_of_birth))}</p>
         </div>
       ),
     },
     {
-      title: "Tên đăng nhập",
-      dataIndex: "username",
-    },
-    {
-      title: "Email",
-      dataIndex: "email",
-      width: 200,
-      render: (value: string) => <p className="line-clamp-1">{value}</p>,
-    },
-    {
-      title: "Ngày sinh",
-      dataIndex: "day_of_birth",
-      render: (value: string) => <p>{formatDateToDateVN(new Date(value))}</p>,
+      title: "Trạng thái",
+      dataIndex: "status",
+      width: 250,
+      render: (value: IUserStatus) => (
+        <StatusBadge status={value.status} reason={value.reason} />
+      ),
     },
     {
       title: "Tiểu sử",
@@ -79,12 +109,14 @@ export function UserPage() {
       ),
     },
     {
-      title: "Địa điểm",
+      title: "Vị trí",
       dataIndex: "location",
+      width: 200,
     },
     {
       title: "Website",
       dataIndex: "website",
+      width: 200,
       render: (value: string) => {
         if (!value) return "-";
         return (
@@ -102,13 +134,20 @@ export function UserPage() {
   ];
 
   //
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(50);
+  const [params] = useSearchParams();
+  const { page, limit, q, qf } = {
+    q: params.get("q") || "",
+    page: params.get("page") || "1",
+    qf: params.get("qf") || "[]",
+    limit: params.get("limit") || "50",
+  };
 
   //
-  const { data } = useGetMultiUsers({
-    page: page.toString(),
-    limit: limit.toString(),
+  const { data, refetch, isLoading, isFetching } = useGetMultiUsers({
+    q: q,
+    page: page,
+    limit: limit,
+    qf: JSON.parse(qf),
   });
   const users = data?.metadata?.items || [];
   const total_page = data?.metadata?.total_page || 0;
@@ -127,7 +166,22 @@ export function UserPage() {
   return (
     <div>
       {/*  */}
-      <Filter />
+      <Filter
+        placeholderSearch="Nhập tên người dùng"
+        reload={
+          <ReloadData
+            onClick={() => refetch()}
+            isLoading={isLoading || isFetching}
+          />
+        }
+        filters={[
+          {
+            key: "status",
+            placeholder: "Trạng thái",
+            values: Object.values(EUserStatus),
+          },
+        ]}
+      />
 
       {/*  */}
       <div className="max-h-[calc(100vh-13rem)] overflow-y-auto pr-1">
@@ -166,14 +220,7 @@ export function UserPage() {
       </div>
 
       {/*  */}
-      <Pagination_
-        total={total}
-        total_page={total_page}
-        page={page}
-        onChangePage={setPage}
-        limit={limit}
-        onChangeLimit={setLimit}
-      />
+      <Pagination_ total={total} total_page={total_page} />
     </div>
   );
 }

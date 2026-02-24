@@ -18,7 +18,7 @@ export function UserMostUsedTable() {
     {
       title: "Người dùng",
       dataIndex: "user_id",
-      width: 100,
+      width: 280,
       render: (user: IUser) => (
         <div className="flex items-center gap-x-2">
           <Avatar>
@@ -38,13 +38,13 @@ export function UserMostUsedTable() {
     {
       title: "Từ cấm",
       dataIndex: "final_content",
-      width: 100,
+      width: 200,
       render: (value: string) => <p className="banned-word">{value}</p>,
     },
     {
       title: "Đang hiển thị trong",
       dataIndex: "source",
-      width: 100,
+      width: 230,
       render: (value: string) => <p>{value}</p>,
     },
   ];

@@ -78,9 +78,7 @@ export function Table_({
             ))}
 
             {hasAction && (
-              <TableHead className="text-right sticky right-0 z-20 bg-background w-[80px]">
-                Hành động
-              </TableHead>
+              <TableHead className="text-right sticky right-0 z-20 bg-background w-[80px]"></TableHead>
             )}
           </TableRow>
         </TableHeader>

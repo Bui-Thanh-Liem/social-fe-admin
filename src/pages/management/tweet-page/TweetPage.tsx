@@ -1,5 +1,5 @@
 import { MoreHorizontalIcon } from "lucide-react";
-import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useGetMultiTweets } from "~/apis/managements/tweet.api";
 import { Filter } from "~/components/Filter";
 // import { VerifyIcon } from "~/components/icons/verify";
@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { Textarea } from "~/components/ui/textarea";
 import type { IMediaBare } from "~/shared/interfaces/media.interface";
 import type { ITweet } from "~/shared/interfaces/tweet.interface";
 // import type { IUser } from "~/shared/interfaces/user.interface";
@@ -36,7 +37,7 @@ export function TweetPage() {
     {
       title: "Hình ảnh và video",
       dataIndex: "medias",
-      width: 100,
+      width: 300,
       render: (value: IMediaBare[] | null) => (
         <div>
           {value && value.length > 0 ? (
@@ -71,14 +72,18 @@ export function TweetPage() {
     {
       title: "Nội dung",
       dataIndex: "content",
-      width: 200,
-      render: (value: string) => <p className="line-clamp-1">{value}</p>,
+      render: (value: string) => (
+        <Textarea value={value} readOnly placeholder="Không có" />
+      ),
     },
   ];
 
   //
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(50);
+  const [params] = useSearchParams();
+  const { page, limit } = {
+    page: Number(params.get("page") || 1),
+    limit: Number(params.get("limit") || 50),
+  };
 
   //
   const { data } = useGetMultiTweets({
@@ -88,6 +93,7 @@ export function TweetPage() {
   const tweets = data?.metadata?.items || [];
   const total_page = data?.metadata?.total_page || 0;
   const total = data?.metadata?.total || 0;
+  console.log("tweets :::", tweets);
 
   //
   const onEdit = (record: ITweet) => {
@@ -141,14 +147,7 @@ export function TweetPage() {
       </div>
 
       {/*  */}
-      <Pagination_
-        total={total}
-        total_page={total_page}
-        page={page}
-        onChangePage={setPage}
-        limit={limit}
-        onChangeLimit={setLimit}
-      />
+      <Pagination_ total={total} total_page={total_page} />
     </div>
   );
 }

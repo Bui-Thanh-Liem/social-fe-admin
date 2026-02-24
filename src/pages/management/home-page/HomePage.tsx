@@ -27,7 +27,7 @@ const carouselItems = [
 
 export function HomePage() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 max-h-[calc(100vh-6rem)] overflow-y-auto pr-1">
       {/* Banner */}
       <div className="h-36 rounded-lg bg-sky-200"></div>
 
@@ -94,11 +94,11 @@ export function HomePage() {
 
       {/*  */}
       <div className="grid grid-cols-5 gap-x-4">
-        <div className="rounded-lg h-95 bg-amber-200"></div>
-        <div className="rounded-lg h-95 bg-sky-500 "></div>
-        <div className="rounded-lg h-95 bg-amber-200"></div>
-        <div className="rounded-lg h-95 bg-sky-500 "></div>
-        <div className="rounded-lg h-95 bg-amber-200"></div>
+        <div className="rounded-lg h-88 bg-amber-200"></div>
+        <div className="rounded-lg h-88 bg-sky-500 "></div>
+        <div className="rounded-lg h-88 bg-amber-200"></div>
+        <div className="rounded-lg h-88 bg-sky-500 "></div>
+        <div className="rounded-lg h-88 bg-amber-200"></div>
       </div>
     </div>
   );
