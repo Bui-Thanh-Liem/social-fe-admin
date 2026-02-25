@@ -16,10 +16,10 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Button } from "~/components/ui/button";
 import { MoreHorizontalIcon } from "lucide-react";
-import { Pagination_ } from "~/components/Pagination";
 import { ReloadData } from "~/components/ReloadData";
 import { useSearchParams } from "react-router-dom";
 import { Filter } from "~/components/Filter";
+import { Pagination_ } from "~/components/Pagination";
 
 export function BadWordsTable() {
   //
