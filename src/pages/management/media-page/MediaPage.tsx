@@ -1,8 +1,10 @@
 import { ClipboardClock, Eye, Trash } from "lucide-react";
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useGetMultiMedia } from "~/apis/managements/media.api";
 import { Filter } from "~/components/Filter";
 import { Pagination_ } from "~/components/Pagination";
+import { ReloadData } from "~/components/ReloadData";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -216,15 +218,21 @@ function MediaItem({ media }: { media: IMedia }) {
   );
 }
 
+//
 export function MediaPage() {
   //
-  const [page, setPage] = useState(1);
-  const [limit, setLimit] = useState(50);
+  const [params] = useSearchParams();
+  const { page, limit, qf } = {
+    page: params.get("page") || "1",
+    qf: params.get("qf") || "[]",
+    limit: params.get("limit") || "50",
+  };
 
   //
-  const { data } = useGetMultiMedia({
-    page: page.toString(),
-    limit: limit.toString(),
+  const { data, refetch, isLoading, isFetching } = useGetMultiMedia({
+    page: page,
+    limit: limit,
+    qf: JSON.parse(qf),
   });
   const medias = data?.metadata?.items || [];
   const total_page = data?.metadata?.total_page || 0;
@@ -233,29 +241,43 @@ export function MediaPage() {
   return (
     <div className="h-full">
       {/*  */}
-      <Filter />
-
-      {/*  */}
-      <div className="grid grid-cols-10 gap-4 max-h-[calc(100vh-13rem)] overflow-y-auto pr-1">
-        {medias.map((media) => (
-          <div
-            key={media.s3_key}
-            className="rounded overflow-hidden col-span-1 h-36"
-          >
-            <MediaItem media={media} />
-          </div>
-        ))}
-      </div>
-
-      {/*  */}
-      <Pagination_
-        total={total}
-        total_page={total_page}
-        page={page}
-        onChangePage={setPage}
-        limit={limit}
-        onChangeLimit={setLimit}
+      <Filter
+        isSearch={false}
+        reload={
+          <ReloadData
+            onClick={() => refetch()}
+            isLoading={isLoading || isFetching}
+          />
+        }
+        filters={[
+          {
+            key: "status",
+            placeholder: "Trạng thái",
+            values: Object.values(EMediaStatus),
+          },
+        ]}
       />
+
+      {/*  */}
+      {medias.length ? (
+        <div className="grid grid-cols-10 gap-4 max-h-[calc(100vh-13rem)] overflow-y-auto pr-1">
+          {medias.map((media) => (
+            <div
+              key={media.s3_key}
+              className="rounded overflow-hidden col-span-1 h-36"
+            >
+              <MediaItem media={media} />
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex h-96 items-center justify-center">
+          không có hình ảnh / video
+        </div>
+      )}
+
+      {/*  */}
+      <Pagination_ total={total} total_page={total_page} />
     </div>
   );
 }

@@ -18,6 +18,7 @@ interface IFilterField {
 }
 
 interface FilterProps {
+  isSearch?: boolean;
   action?: ReactNode;
   reload?: ReactNode;
   placeholderSearch?: string;
@@ -28,6 +29,7 @@ export function Filter({
   action,
   reload,
   filters,
+  isSearch = true,
   placeholderSearch,
 }: FilterProps) {
   const navigate = useNavigate();
@@ -85,16 +87,18 @@ export function Filter({
       {reload}
       <div className="flex gap-x-4">
         {/* Search */}
-        <div className="min-w-40">
-          <Input
-            placeholder={placeholderSearch || "Nhập..."}
-            onKeyDown={handleSearch}
-            value={searchValue}
-            onChange={(e) => {
-              setSearchValue(e.target.value);
-            }}
-          />
-        </div>
+        {isSearch && (
+          <div className="min-w-40">
+            <Input
+              placeholder={placeholderSearch || "Nhập..."}
+              onKeyDown={handleSearch}
+              value={searchValue}
+              onChange={(e) => {
+                setSearchValue(e.target.value);
+              }}
+            />
+          </div>
+        )}
 
         {/* Filters Fields */}
         {filters &&

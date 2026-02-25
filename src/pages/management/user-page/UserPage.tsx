@@ -2,11 +2,10 @@ import { MoreHorizontalIcon } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useGetMultiUsers } from "~/apis/managements/user.api";
 import { Filter } from "~/components/Filter";
-import { VerifyIcon } from "~/components/icons/verify";
 import { Pagination_ } from "~/components/Pagination";
 import { ReloadData } from "~/components/ReloadData";
+import { ShowUser } from "~/components/ShowUser";
 import { Table_, type Column } from "~/components/Table_";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -48,12 +47,8 @@ export function UserPage() {
       title: "Avatar",
       dataIndex: "avatar",
       fixed: "left",
-      render: (value: IMediaBare, record: IUser) => (
-        <Avatar>
-          <AvatarImage src={value?.url || "/favicon.png"} />
-          <AvatarFallback>{record.name}</AvatarFallback>
-        </Avatar>
-      ),
+      width: 250,
+      render: (value: IMediaBare, record: IUser) => <ShowUser user={record} />,
     },
     {
       title: "Ảnh bìa",
@@ -65,20 +60,6 @@ export function UserPage() {
           src={value?.url || "/favicon.png"}
           alt={record.name}
         />
-      ),
-    },
-    {
-      title: "Tên",
-      dataIndex: "name",
-      width: 200,
-      render: (value: boolean, record: IUser) => (
-        <>
-          <div className="flex items-center gap-x-2">
-            <p className="max-w-40 line-clamp-1">{value}</p>{" "}
-            <VerifyIcon active={!!record.verify} size={20} />
-          </div>
-          <p>{record.username}</p>
-        </>
       ),
     },
     {

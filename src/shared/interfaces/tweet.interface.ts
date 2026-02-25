@@ -7,6 +7,7 @@ import type { ETweetAudience } from "../enums/common.enum";
 export interface ICodesTweet {
   _id: string;
   code: string;
+  langKey: string;
 }
 
 export interface ITweet extends IBase {

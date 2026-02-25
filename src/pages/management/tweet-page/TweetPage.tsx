@@ -1,14 +1,12 @@
 import { MoreHorizontalIcon } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useGetMultiTweets } from "~/apis/managements/tweet.api";
+import { EditorCodeItem } from "~/components/EditorCode";
 import { Filter } from "~/components/Filter";
-// import { VerifyIcon } from "~/components/icons/verify";
 import { Pagination_ } from "~/components/Pagination";
 import { ReloadData } from "~/components/ReloadData";
 import { Table_, type Column } from "~/components/Table_";
-import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Badge } from "~/components/ui/badge";
-// import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -23,8 +21,9 @@ import type { ICommunity } from "~/shared/interfaces/community.interface";
 import type { IMediaBare } from "~/shared/interfaces/media.interface";
 import type { ITweet } from "~/shared/interfaces/tweet.interface";
 import type { IUser } from "~/shared/interfaces/user.interface";
-// import type { IUser } from "~/shared/interfaces/user.interface";
-// import { formatDateToDateVN } from "~/utils/date-time";
+import { motion } from "framer-motion";
+import { ShowUser } from "~/components/ShowUser";
+import { ShowCommunity } from "~/components/ShowCommunity";
 
 export function StatusBadge({ status }: { status: ETweetStatus }) {
   return (
@@ -36,7 +35,7 @@ export function StatusBadge({ status }: { status: ETweetStatus }) {
             ? "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"
             : status === ETweetStatus.Reject
               ? "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300"
-              : "bg-black-50 text-black-700 dark:bg-black-950 dark:text-black-300",
+              : "bg-yellow-50 text-yellow-700 dark:bg-yellow-950 dark:text-yellow-300",
         )}
       >
         {status}
@@ -49,47 +48,25 @@ export function TweetPage() {
   //
   const columns: Column[] = [
     {
-      title: "Avatar",
-      dataIndex: "avatar",
-      fixed: "left",
-      width: 80,
-      render: (value: IMediaBare, record: IUser) => (
-        <Avatar>
-          <AvatarImage src={value?.url || "/favicon.png"} />
-          <AvatarFallback>{record.name}</AvatarFallback>
-        </Avatar>
-      ),
-    },
-    {
-      title: "Sở hữu",
+      title: "Người dùng - Cộng đồng",
       dataIndex: "user_id",
-      width: 200,
-      render: (value: IUser, record: ITweet) => {
+      width: 250,
+      render: (user: IUser, record: ITweet) => {
         const community = record.community_id as unknown as ICommunity;
 
-        if (!value) return "-";
+        if (!user) return "-";
         return (
-          <>
-            <Avatar>
-              <AvatarImage src={value?.avatar?.url || "/favicon.png"} />
-              <AvatarFallback>{value?.name}</AvatarFallback>
-            </Avatar>
-            <a
-              href={community?.slug}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-blue-500 underline line-clamp-1"
-            >
-              {community?.name}
-            </a>
-          </>
+          <div className="space-y-2">
+            <ShowUser user={user} />
+            <ShowCommunity community={community} />
+          </div>
         );
       },
     },
     {
       title: "Hình ảnh và video",
       dataIndex: "medias",
-      width: 300,
+      width: 200,
       render: (value: IMediaBare[] | null) => (
         <div>
           {value && value.length > 0 ? (
@@ -122,11 +99,29 @@ export function TweetPage() {
       ),
     },
     {
-      title: "Nội dung",
+      title: "Nội dung - Code",
       dataIndex: "content",
-      render: (value: string) => (
-        <Textarea value={value} readOnly placeholder="Không có" />
-      ),
+      render: (value: string, tweet: ITweet) => {
+        return (
+          <div className="space-y-2">
+            <Textarea value={value} readOnly placeholder="Không có" />
+            <motion.div layout className="my-2 flex gap-2 flex-wrap">
+              {tweet?.codes &&
+                tweet.codes?.length &&
+                tweet.codes?.map((codeItem) => (
+                  <EditorCodeItem
+                    readonly
+                    key={codeItem._id}
+                    code={codeItem.code}
+                    langKey={codeItem.langKey}
+                    onClose={() => {}}
+                    onChangeCode={() => {}}
+                  />
+                ))}
+            </motion.div>
+          </div>
+        );
+      },
     },
 
     {
@@ -139,9 +134,10 @@ export function TweetPage() {
 
   //
   const [params] = useSearchParams();
-  const { page, limit, q } = {
+  const { page, limit, q, qf } = {
     q: params.get("q") || "",
     page: params.get("page") || "1",
+    qf: params.get("qf") || "[]",
     limit: params.get("limit") || "50",
   };
 
@@ -150,6 +146,7 @@ export function TweetPage() {
     q,
     page: page,
     limit: limit,
+    qf: JSON.parse(qf),
   });
   const tweets = data?.metadata?.items || [];
   const total_page = data?.metadata?.total_page || 0;
@@ -175,6 +172,13 @@ export function TweetPage() {
             isLoading={isLoading || isFetching}
           />
         }
+        filters={[
+          {
+            key: "status",
+            placeholder: "Trạng thái",
+            values: Object.values(ETweetStatus),
+          },
+        ]}
         placeholderSearch="Nhập nội dung tìm kiếm..."
       />
 
