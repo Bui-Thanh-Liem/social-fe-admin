@@ -1,16 +1,17 @@
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFound from "./components/NotFound";
 import { RedirectIfAuthenticated } from "./components/RedirectIfAuthenticated";
 import { RedirectIfNotAuthenticated } from "./components/RedirectIfNotAuthenticated";
 import { AuthLayout } from "./layouts/AuthLayout";
 import { DashboardLayout } from "./layouts/DashboardLayout";
+import { Setup2FaPage } from "./pages/auth/Setup2FaPage";
+import { BadWordsPage } from "./pages/management/bad-wrods-page/BadWordsPage";
+import { CommunityPage } from "./pages/management/community-page/CommunityPage";
 import { HomePage } from "./pages/management/home-page/HomePage";
 import { MediaPage } from "./pages/management/media-page/MediaPage";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { UserPage } from "./pages/management/user-page/UserPage";
-import { CommunityPage } from "./pages/management/community-page/CommunityPage";
 import { TweetPage } from "./pages/management/tweet-page/TweetPage";
-import { BadWordsPage } from "./pages/management/bad-wrods-page/BadWordsPage";
+import { UserPage } from "./pages/management/user-page/UserPage";
 
 // Router config
 const router = createBrowserRouter([
@@ -35,6 +36,10 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <HomePage />,
+          },
+          {
+            path: "/setup-2fa",
+            element: <Setup2FaPage />,
           },
           {
             path: "/management/media",
