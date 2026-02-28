@@ -5,6 +5,7 @@ import type { ResLogin } from "~/shared/dtos/res/auth.dto";
 import type { IAdmin } from "~/shared/interfaces/admin.interface";
 import { useAdminStore } from "~/stores/useAdminStore";
 import { apiCall } from "./callApi.util";
+import { toastSimple } from "~/utils/toast";
 
 // 🔐 POST - Login
 export const useLogin = () => {
@@ -35,15 +36,39 @@ export const useLogin = () => {
           }
 
           // Kiểm tra xem có phải lần đầu đăng nhập hay không, nếu có thì chuyển đến trang thiết lập 2FA
-          if (resGetMe.metadata?.twoFactorEnabled === false) {
+          if (resGetMe.metadata?.two_factor_enabled === false) {
             navigate("/setup-2fa", {
               replace: true,
             });
           }
-        })();
 
-        //
-        // navigate("/", { replace: true });
+          // Kiểm tra xem có phải lần đầu đăng nhập hay không, nếu có thì chuyển đến trang thiết lập 2FA
+          if (!resGetMe.metadata?.two_factor_session_enabled) {
+            toastSimple("Vui lòng nhập mã từ ứng dụng Authenticator", "info");
+          }
+        })();
+      }
+    },
+  });
+};
+
+// 🔐 POST - Logout
+export const useLogout = () => {
+  const { clearAdmin } = useAdminStore();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: () =>
+      apiCall("/admin/logout", {
+        method: "POST",
+      }),
+    onSuccess: (data) => {
+      if (data.statusCode === 200) {
+        // Lưu token
+        localStorage.removeItem("access_token");
+        localStorage.removeItem("refresh_token");
+        clearAdmin();
+        navigate("/", { replace: true });
       }
     },
   });
@@ -63,13 +88,41 @@ export const useSetup2Fa = () => {
 
 // 🚪 POST - Active f2a
 export const useActive2Fa = () => {
+  const { admin, setAdmin } = useAdminStore();
+  const navigate = useNavigate();
+
   return useMutation({
     mutationFn: (credentials: { token: string }) =>
       apiCall("/admin/2fa/active", {
         method: "POST",
         body: JSON.stringify(credentials),
       }),
-    onSuccess: () => {},
+    onSuccess: (data) => {
+      if (data.statusCode === 200 && admin) {
+        setAdmin({ ...admin, two_factor_session_enabled: true });
+        navigate("/", { replace: true });
+      }
+    },
+  });
+};
+
+// 🚪 POST - Verify f2a
+export const useVerify2Fa = () => {
+  const { admin, setAdmin } = useAdminStore();
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: (credentials: { token: string }) =>
+      apiCall("/admin/2fa/verify", {
+        method: "POST",
+        body: JSON.stringify(credentials),
+      }),
+    onSuccess: (data) => {
+      if (data.statusCode === 200 && admin) {
+        setAdmin({ ...admin, two_factor_session_enabled: true });
+        navigate("/", { replace: true });
+      }
+    },
   });
 };
 

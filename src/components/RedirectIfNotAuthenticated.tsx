@@ -9,7 +9,7 @@ export function RedirectIfNotAuthenticated({
 }) {
   const admin = useAdminStore((state) => state.admin);
 
-  if (!admin) {
+  if (!admin || !admin.two_factor_session_enabled) {
     // Xóa token
     return <Navigate to="/login" replace />;
   }

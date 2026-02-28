@@ -12,6 +12,7 @@ import { HomePage } from "./pages/management/home-page/HomePage";
 import { MediaPage } from "./pages/management/media-page/MediaPage";
 import { TweetPage } from "./pages/management/tweet-page/TweetPage";
 import { UserPage } from "./pages/management/user-page/UserPage";
+import { LoginPage } from "./pages/auth/LoginPage";
 
 // Router config
 const router = createBrowserRouter([
@@ -19,12 +20,22 @@ const router = createBrowserRouter([
     path: "/",
     children: [
       {
-        path: "login",
         element: (
           <RedirectIfAuthenticated>
             <AuthLayout />
           </RedirectIfAuthenticated>
         ),
+        children: [
+          {
+            path: "login",
+            index: true,
+            element: <LoginPage />,
+          },
+          {
+            path: "/setup-2fa",
+            element: <Setup2FaPage />,
+          },
+        ],
       },
       {
         element: (
@@ -36,10 +47,6 @@ const router = createBrowserRouter([
           {
             index: true,
             element: <HomePage />,
-          },
-          {
-            path: "/setup-2fa",
-            element: <Setup2FaPage />,
           },
           {
             path: "/management/media",

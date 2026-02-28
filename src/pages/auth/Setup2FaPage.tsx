@@ -1,6 +1,7 @@
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useEffect, useState } from "react";
 import { useActive2Fa, useSetup2Fa } from "~/apis/auth.api";
+import { Card, CardContent } from "~/components/ui/card";
 import { Field, FieldLabel } from "~/components/ui/field";
 import {
   InputOTP,
@@ -28,6 +29,7 @@ export function Setup2FaPage() {
           if (res.statusCode === 200 && res.metadata) {
             setUrlCode(res.metadata.qrCodeUrl);
           }
+          handleResponse(res);
         });
     }
   }, []);
@@ -44,27 +46,29 @@ export function Setup2FaPage() {
   }
 
   return (
-    <div>
-      Setup 2FA for admin_id: {admin?._id}
-      <img src={urlCode} alt="QR CODE" />
-      <Field className="w-fit">
-        <FieldLabel htmlFor="digits-only">Digits Only</FieldLabel>
-        <InputOTP
-          maxLength={6}
-          id="digits-only"
-          pattern={REGEXP_ONLY_DIGITS}
-          onChange={onSubmit}
-        >
-          <InputOTPGroup>
-            <InputOTPSlot index={0} />
-            <InputOTPSlot index={1} />
-            <InputOTPSlot index={2} />
-            <InputOTPSlot index={3} />
-            <InputOTPSlot index={4} />
-            <InputOTPSlot index={5} />
-          </InputOTPGroup>
-        </InputOTP>
-      </Field>
-    </div>
+    <Card className="m-auto">
+      <CardContent>
+        Setup 2FA for admin_id: {admin?._id}
+        <img src={urlCode} alt="QR CODE" />
+        <Field className="w-fit">
+          <FieldLabel htmlFor="digits-only">Digits Only</FieldLabel>
+          <InputOTP
+            maxLength={6}
+            id="digits-only"
+            pattern={REGEXP_ONLY_DIGITS}
+            onChange={onSubmit}
+          >
+            <InputOTPGroup>
+              <InputOTPSlot index={0} />
+              <InputOTPSlot index={1} />
+              <InputOTPSlot index={2} />
+              <InputOTPSlot index={3} />
+              <InputOTPSlot index={4} />
+              <InputOTPSlot index={5} />
+            </InputOTPGroup>
+          </InputOTP>
+        </Field>
+      </CardContent>
+    </Card>
   );
 }

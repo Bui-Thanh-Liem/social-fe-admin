@@ -5,7 +5,7 @@ import { useAdminStore } from "../stores/useAdminStore";
 export function RedirectIfAuthenticated({ children }: { children: ReactNode }) {
   const admin = useAdminStore((state) => state.admin);
 
-  if (admin) {
+  if (admin && admin.two_factor_session_enabled) {
     return <Navigate to="/" replace />;
   }
 
