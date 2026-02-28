@@ -49,7 +49,7 @@ export function CommunityPage() {
       dataIndex: "cover",
       fixed: "left",
       width: 60,
-      render: (value: IMediaBare, record: ICommunity) => (
+      render: (_value: IMediaBare, record: ICommunity) => (
         <ShowCommunity community={record} />
       ),
     },

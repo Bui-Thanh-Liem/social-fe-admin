@@ -48,7 +48,7 @@ export function UserPage() {
       dataIndex: "avatar",
       fixed: "left",
       width: 250,
-      render: (value: IMediaBare, record: IUser) => <ShowUser user={record} />,
+      render: (_value: IMediaBare, record: IUser) => <ShowUser user={record} />,
     },
     {
       title: "Ảnh bìa",
