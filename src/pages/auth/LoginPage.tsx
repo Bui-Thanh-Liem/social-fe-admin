@@ -1,4 +1,5 @@
 import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useLogin, useVerify2Fa } from "~/apis/auth.api";
 import { Logo } from "~/components/Logo";
@@ -12,12 +13,12 @@ import {
   InputOTPSlot,
 } from "~/components/ui/input-otp";
 import type { LoginAuthDto } from "~/shared/dtos/req/auth.dto";
-import { useAdminStore } from "~/stores/useAdminStore";
 import { handleResponse } from "~/utils/toast";
 
 export function LoginPage() {
   //
-  const { admin } = useAdminStore();
+  const [isOpenVerify2Fa, setIsOpenVerify2Fa] = useState(false);
+  const [adminId, setAdminId] = useState("");
   const apiLogin = useLogin();
   const apiVerifyF2a = useVerify2Fa();
 
@@ -46,6 +47,10 @@ export function LoginPage() {
   //
   async function onSubmit(data: LoginAuthDto) {
     const res = await apiLogin.mutateAsync(data);
+    if (res.statusCode === 200 && !res.metadata?.two_factor_session_enabled) {
+      setIsOpenVerify2Fa(true);
+      setAdminId(res.metadata?.admin_id || "");
+    }
     handleResponse(res);
   }
 
@@ -55,7 +60,7 @@ export function LoginPage() {
     if (value.length !== 6) {
       return;
     }
-    apiVerifyF2a.mutateAsync({ token: value }).then((res) => {
+    apiVerifyF2a.mutateAsync({ token: value, _id: adminId }).then((res) => {
       handleResponse(res);
     });
   }
@@ -107,7 +112,7 @@ export function LoginPage() {
             </Button>
           </div>
         </form>
-        {admin && !admin.two_factor_session_enabled ? (
+        {isOpenVerify2Fa ? (
           <Field className="w-fit">
             <FieldLabel htmlFor="digits-only">Digits Only</FieldLabel>
             <InputOTP

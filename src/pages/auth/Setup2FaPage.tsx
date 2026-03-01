@@ -1,5 +1,6 @@
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import { useActive2Fa, useSetup2Fa } from "~/apis/auth.api";
 import { Card, CardContent } from "~/components/ui/card";
 import { Field, FieldLabel } from "~/components/ui/field";
@@ -8,22 +9,25 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "~/components/ui/input-otp";
-import { useAdminStore } from "~/stores/useAdminStore";
 import { handleResponse } from "~/utils/toast";
 
 export function Setup2FaPage() {
-  const { admin } = useAdminStore();
   const apiSetup2Fa = useSetup2Fa();
   const apiActive2Fa = useActive2Fa();
   const [urlCode, setUrlCode] = useState("");
 
   //
+  const [params] = useSearchParams();
+  const admin_id = params.get("admin_id") || "";
+
+  //
   useEffect(() => {
-    if (admin?._id && admin.email) {
+    if (admin_id) {
+      console.log("apiSetup2Fa", admin_id);
+
       apiSetup2Fa
         .mutateAsync({
-          _id: admin._id,
-          email: admin.email,
+          _id: admin_id,
         })
         .then((res) => {
           if (res.statusCode === 200 && res.metadata) {
@@ -40,7 +44,7 @@ export function Setup2FaPage() {
     if (value.length !== 6) {
       return;
     }
-    apiActive2Fa.mutateAsync({ token: value }).then((res) => {
+    apiActive2Fa.mutateAsync({ token: value, _id: admin_id }).then((res) => {
       handleResponse(res);
     });
   }
@@ -48,7 +52,7 @@ export function Setup2FaPage() {
   return (
     <Card className="m-auto">
       <CardContent>
-        Setup 2FA for admin_id: {admin?._id}
+        Setup 2FA for admin_id: {admin_id}
         <img src={urlCode} alt="QR CODE" />
         <Field className="w-fit">
           <FieldLabel htmlFor="digits-only">Digits Only</FieldLabel>
