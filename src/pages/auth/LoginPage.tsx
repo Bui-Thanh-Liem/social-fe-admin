@@ -3,7 +3,7 @@ import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useLogin, useVerify2Fa } from "~/apis/auth.api";
 import { Logo } from "~/components/Logo";
 import { Button } from "~/components/ui/button";
@@ -14,6 +14,7 @@ import {
   InputOTPGroup,
   InputOTPSlot,
 } from "~/components/ui/input-otp";
+import { Label } from "~/components/ui/label";
 import { WrapIcon } from "~/components/WrapIcon";
 import {
   LoginAuthDtoSchema,
@@ -24,10 +25,10 @@ import { handleResponse } from "~/utils/toast";
 export function LoginPage() {
   //
   const [isOpenVerify2Fa, setIsOpenVerify2Fa] = useState(false);
+  const [isOpenAlreadyLogin, setIsOpenAlreadyLogin] = useState(false);
   const [adminId, setAdminId] = useState("");
   const apiLogin = useLogin();
   const apiVerifyF2a = useVerify2Fa();
-  const navigate = useNavigate();
 
   //
   const {
@@ -49,10 +50,14 @@ export function LoginPage() {
   //
   async function onSubmit(data: LoginAuthDto) {
     const res = await apiLogin.mutateAsync(data);
-    if (res.statusCode === 200 && !res.metadata?.two_factor_session_enabled) {
+    console.log("Login response:", res);
+
+    if (res.statusCode === 200) {
       setIsOpenVerify2Fa(true);
       setAdminId(res.metadata?.admin_id || "");
+      if (res.metadata?.two_factor_session_enabled) setIsOpenAlreadyLogin(true);
     }
+
     handleResponse(res);
   }
 
@@ -67,12 +72,14 @@ export function LoginPage() {
     });
   }
 
+  console.log("isOpenVerify2Fa:", isOpenVerify2Fa);
+
   return (
     <div className="m-auto flex items-center gap-x-48">
-      {isOpenVerify2Fa ? (
+      {isOpenVerify2Fa && (
         <div className="flex gap-x-3">
           <div>
-            <WrapIcon onClick={() => navigate(-1)}>
+            <WrapIcon onClick={() => setIsOpenVerify2Fa(false)}>
               <ArrowLeft />
             </WrapIcon>
           </div>
@@ -107,9 +114,17 @@ export function LoginPage() {
                 để cài đặt lại xác thực 2 bước.
               </li>
             </ul>
+            {isOpenAlreadyLogin && (
+              <Label className="text-md">
+                <span className="text-red-500">Cảnh báo:</span> Tài khoản của
+                bạn đang được sử dụng ở nơi khác
+              </Label>
+            )}
           </Field>
         </div>
-      ) : (
+      )}
+
+      {!isOpenVerify2Fa && (
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex items-center justify-center"

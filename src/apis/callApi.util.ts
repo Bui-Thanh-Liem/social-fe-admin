@@ -1,5 +1,4 @@
 import type { OkResponse } from "~/shared/classes/response.class";
-import type { ResLogin } from "~/shared/dtos/res/auth.dto";
 import { useAdminStore } from "~/stores/useAdminStore";
 import { deleteStoredClient } from "~/utils/deleteStoredClient";
 
@@ -9,7 +8,7 @@ export const apiCall = async <T>(
   endpoint: string,
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   options: any = {},
-  isClientId: boolean = false
+  isClientId: boolean = false,
 ): Promise<OkResponse<T>> => {
   const admin = useAdminStore.getState().admin;
   const access_token = localStorage.getItem("access_token");
@@ -40,60 +39,61 @@ export const apiCall = async <T>(
   };
 
   // Initial API call
-  let response = await fetch(`${apiUrl}${endpoint}`, config);
+  const response = await fetch(`${apiUrl}${endpoint}`, config);
   // console.log("Đang gọi api::", `${apiUrl}${endpoint}`);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  let result = (await response.json()) as OkResponse<any>;
+  const result = (await response.json()) as OkResponse<any>;
 
   // Tại đây kiểm tra xem có hết hạn access_token không, có thì refresh lại access_token
   if (
-    result.statusCode === 401 &&
-    result.message === "TokenExpiredError: jwt expired"
+    result.statusCode === 401
+    // result.message === "TokenExpiredError: jwt expired"
   ) {
+    deleteStoredClient();
     console.log("Token đã hết hạn tiến hành refresh");
 
-    // Fix: Get refresh_token, not access_token again
-    const refresh_token = localStorage.getItem("refresh_token") || "";
+    // // Fix: Get refresh_token, not access_token again
+    // const refresh_token = localStorage.getItem("refresh_token") || "";
 
-    // Fix: Proper fetch call with headers
-    const refreshResponse = await fetch(`${apiUrl}/auth/refresh-token`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ refresh_token }),
-    });
+    // // Fix: Proper fetch call with headers
+    // const refreshResponse = await fetch(`${apiUrl}/auth/refresh-token`, {
+    //   method: "POST",
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify({ refresh_token }),
+    // });
 
-    const resRefreshToken =
-      (await refreshResponse.json()) as OkResponse<ResLogin>;
+    // const resRefreshToken =
+    //   (await refreshResponse.json()) as OkResponse<ResLogin>;
 
-    if (resRefreshToken?.statusCode === 200) {
-      localStorage.setItem(
-        "access_token",
-        resRefreshToken.metadata?.access_token || ""
-      );
-      localStorage.setItem(
-        "refresh_token",
-        resRefreshToken.metadata?.refresh_token || ""
-      );
+    // if (resRefreshToken?.statusCode === 200) {
+    //   localStorage.setItem(
+    //     "access_token",
+    //     resRefreshToken.metadata?.access_token || ""
+    //   );
+    //   localStorage.setItem(
+    //     "refresh_token",
+    //     resRefreshToken.metadata?.refresh_token || ""
+    //   );
 
-      // Update the Authorization header with new token
-      config.headers = {
-        ...config.headers,
-        Authorization: `Bearer ${resRefreshToken.metadata?.access_token}`,
-      };
+    //   // Update the Authorization header with new token
+    //   config.headers = {
+    //     ...config.headers,
+    //     Authorization: `Bearer ${resRefreshToken.metadata?.access_token}`,
+    //   };
 
-      // Retry the original request with new token
-      response = await fetch(`${apiUrl}${endpoint}`, config);
-      result = await response.json();
-    } else {
-      // If refresh fails, redirect to login or handle accordingly
-      deleteStoredClient();
+    //   // Retry the original request with new token
+    //   response = await fetch(`${apiUrl}${endpoint}`, config);
+    //   result = await response.json();
+    // } else {
+    //   // If refresh fails, redirect to login or handle accordingly
+    //   deleteStoredClient();
 
-      // You might want to redirect to login page here
-      console.log("Lỗi khi gọi api refresh token:::", resRefreshToken);
-      window.location.href = "/";
-    }
+    //   // You might want to redirect to login page here
+    //   console.log("Lỗi khi gọi api refresh token:::", resRefreshToken);
+    //   window.location.href = "/";
+    // }
   }
 
   return result;

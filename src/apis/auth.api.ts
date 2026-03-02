@@ -8,6 +8,7 @@ import type {
 } from "~/shared/dtos/res/auth.dto";
 import type { IAdmin } from "~/shared/interfaces/admin.interface";
 import { useAdminStore } from "~/stores/useAdminStore";
+import { deleteStoredClient } from "~/utils/deleteStoredClient";
 import { apiCall } from "./callApi.util";
 
 // 🔐 POST - Login
@@ -35,7 +36,6 @@ export const useLogin = () => {
 
 // 🔐 POST - Logout
 export const useLogout = () => {
-  const { clearAdmin } = useAdminStore();
   const navigate = useNavigate();
 
   return useMutation({
@@ -46,9 +46,7 @@ export const useLogout = () => {
     onSuccess: (data) => {
       if (data.statusCode === 200) {
         // Lưu token
-        localStorage.removeItem("access_token");
-        localStorage.removeItem("refresh_token");
-        clearAdmin();
+        deleteStoredClient();
         navigate("/", { replace: true });
       }
     },
@@ -111,6 +109,8 @@ export const useVerify2Fa = () => {
           // Nếu đăng nhập thành công thì gọi api getMe lưu vào Store global
           (async () => {
             const resGetMe = await getMe.mutateAsync();
+            console.log("resGetMe:", resGetMe);
+
             if (resGetMe.statusCode === 200 && resGetMe?.metadata) {
               setAdmin(resGetMe.metadata);
               navigate("/", { replace: true });
