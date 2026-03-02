@@ -1,7 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 import type { LoginAuthDto } from "~/shared/dtos/req/auth.dto";
-import type { ResLogin, ResVerify2Fa } from "~/shared/dtos/res/auth.dto";
+import type {
+  ResActive2Fa,
+  ResLogin,
+  ResVerify2Fa,
+} from "~/shared/dtos/res/auth.dto";
 import type { IAdmin } from "~/shared/interfaces/admin.interface";
 import { useAdminStore } from "~/stores/useAdminStore";
 import { apiCall } from "./callApi.util";
@@ -67,19 +71,13 @@ export const useSetup2Fa = () => {
 
 // 🚪 POST - Active f2a
 export const useActive2Fa = () => {
-  const navigate = useNavigate();
-
   return useMutation({
     mutationFn: (credentials: { token: string; _id: string }) =>
-      apiCall(`/admin/2fa/active/${credentials._id}`, {
+      apiCall<ResActive2Fa>(`/admin/2fa/active/${credentials._id}`, {
         method: "POST",
         body: JSON.stringify(credentials),
       }),
-    onSuccess: (data) => {
-      if (data.statusCode === 200) {
-        navigate("/login", { replace: true });
-      }
-    },
+    onSuccess: () => {},
   });
 };
 

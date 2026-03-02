@@ -1,18 +1,24 @@
+import { zodResolver } from "@hookform/resolvers/zod";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
+import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link, useNavigate } from "react-router-dom";
 import { useLogin, useVerify2Fa } from "~/apis/auth.api";
 import { Logo } from "~/components/Logo";
 import { Button } from "~/components/ui/button";
-import { Card, CardContent } from "~/components/ui/card";
-import { Field, FieldLabel } from "~/components/ui/field";
+import { Field } from "~/components/ui/field";
 import { InputMain } from "~/components/ui/input";
 import {
   InputOTP,
   InputOTPGroup,
   InputOTPSlot,
 } from "~/components/ui/input-otp";
-import type { LoginAuthDto } from "~/shared/dtos/req/auth.dto";
+import { WrapIcon } from "~/components/WrapIcon";
+import {
+  LoginAuthDtoSchema,
+  type LoginAuthDto,
+} from "~/shared/dtos/req/auth.dto";
 import { handleResponse } from "~/utils/toast";
 
 export function LoginPage() {
@@ -21,6 +27,7 @@ export function LoginPage() {
   const [adminId, setAdminId] = useState("");
   const apiLogin = useLogin();
   const apiVerifyF2a = useVerify2Fa();
+  const navigate = useNavigate();
 
   //
   const {
@@ -32,17 +39,12 @@ export function LoginPage() {
     email: string;
     password: string;
   }>({
-    // resolver: zodResolver(LoginUserDtoSchema),
+    resolver: zodResolver(LoginAuthDtoSchema),
     defaultValues: {
       email: "",
       password: "",
     },
   });
-
-  //
-  function onClickForgotPass() {
-    // setOpenFormRegister(true);
-  }
 
   //
   async function onSubmit(data: LoginAuthDto) {
@@ -66,11 +68,48 @@ export function LoginPage() {
   }
 
   return (
-    <Card className="m-auto">
-      <CardContent>
-        <div className="flex items-center justify-center">
-          <Logo />
+    <div className="m-auto flex items-center gap-x-48">
+      {isOpenVerify2Fa ? (
+        <div className="flex gap-x-3">
+          <div>
+            <WrapIcon onClick={() => navigate(-1)}>
+              <ArrowLeft />
+            </WrapIcon>
+          </div>
+          <Field>
+            <InputOTP
+              maxLength={6}
+              id="2fa"
+              pattern={REGEXP_ONLY_DIGITS}
+              onChange={onSubmitVerifyF2a}
+            >
+              <InputOTPGroup>
+                <InputOTPSlot index={0} />
+                <InputOTPSlot index={1} />
+                <InputOTPSlot index={2} />
+                <InputOTPSlot index={3} />
+                <InputOTPSlot index={4} />
+                <InputOTPSlot index={5} />
+              </InputOTPGroup>
+            </InputOTP>
+            <ul className="mt-3 mb-6 ml-6 list-disc [&>li]:mt-2">
+              <li>
+                Sử dụng{" "}
+                <Link to="/use-backup-key" className="underline">
+                  mã dự phòng
+                </Link>
+                .
+              </li>
+              <li>
+                <Link to="/contact-admin" className="underline">
+                  Liên hệ quản trị viên
+                </Link>{" "}
+                để cài đặt lại xác thực 2 bước.
+              </li>
+            </ul>
+          </Field>
         </div>
+      ) : (
         <form
           onSubmit={handleSubmit(onSubmit)}
           className="flex items-center justify-center"
@@ -96,43 +135,16 @@ export function LoginPage() {
               type="password"
               control={control}
               register={register}
-              placeholder="Nhập mật khẩu của bạn"
+              placeholder="nhập mật khẩu của bạn"
             />
 
             <Button type="submit" size="lg" className="w-full">
               Tiếp theo
             </Button>
-            <Button
-              size="lg"
-              className="w-full"
-              variant="outline"
-              onClick={() => onClickForgotPass()}
-            >
-              Quên mật khẩu ?
-            </Button>
           </div>
         </form>
-        {isOpenVerify2Fa ? (
-          <Field className="w-fit">
-            <FieldLabel htmlFor="digits-only">Digits Only</FieldLabel>
-            <InputOTP
-              maxLength={6}
-              id="digits-only"
-              pattern={REGEXP_ONLY_DIGITS}
-              onChange={onSubmitVerifyF2a}
-            >
-              <InputOTPGroup>
-                <InputOTPSlot index={0} />
-                <InputOTPSlot index={1} />
-                <InputOTPSlot index={2} />
-                <InputOTPSlot index={3} />
-                <InputOTPSlot index={4} />
-                <InputOTPSlot index={5} />
-              </InputOTPGroup>
-            </InputOTP>
-          </Field>
-        ) : null}
-      </CardContent>
-    </Card>
+      )}
+      <Logo size={400} />
+    </div>
   );
 }

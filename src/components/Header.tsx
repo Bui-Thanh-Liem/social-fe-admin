@@ -3,6 +3,12 @@ import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { BellRing, AArrowUp } from "lucide-react";
 import { Button } from "./ui/button";
 import { useLogout } from "~/apis/auth.api";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 export function Header() {
   const apiLogout = useLogout();
@@ -29,14 +35,24 @@ export function Header() {
         </Button>
 
         <BellRing size={20} />
-        <Avatar>
-          <AvatarImage src="/favicon.png" />
-          <AvatarFallback>CN</AvatarFallback>
-        </Avatar>
 
-        <Button variant="destructive" onClick={handleLogout}>
-          Logout
-        </Button>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Avatar>
+              <AvatarImage src="/favicon.png" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </DropdownMenuTrigger>
+
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem
+              onClick={() => handleLogout()}
+              variant="destructive"
+            >
+              Đăng xuất
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
