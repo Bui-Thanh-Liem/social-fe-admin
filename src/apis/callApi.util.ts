@@ -50,7 +50,7 @@ export const apiCall = async <T>(
     // result.message === "TokenExpiredError: jwt expired"
   ) {
     deleteStoredClient();
-    console.log("Token đã hết hạn tiến hành refresh");
+    console.log("Token đã hết hạn. Vui lòng đăng nhập lại.");
 
     // // Fix: Get refresh_token, not access_token again
     // const refresh_token = localStorage.getItem("refresh_token") || "";
