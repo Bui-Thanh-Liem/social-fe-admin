@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { apiCall } from "../callApi.util";
+import { apiCall } from "../callApi.api";
 import type { IQuery } from "~/shared/interfaces/common/query.interface";
 import type { ResMultiType } from "~/shared/types/response.type";
 import { buildQueryString } from "~/utils/buildQueryString";

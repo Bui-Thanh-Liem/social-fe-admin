@@ -9,7 +9,7 @@ import type {
 import type { IAdmin } from "~/shared/interfaces/admin.interface";
 import { useAdminStore } from "~/stores/useAdminStore";
 import { deleteStoredClient } from "~/utils/deleteStoredClient";
-import { apiCall } from "./callApi.util";
+import { apiCall } from "./callApi.api";
 
 // 🔐 POST - Login
 export const useLogin = () => {
@@ -17,7 +17,7 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: (credentials: LoginAuthDto) =>
-      apiCall<ResLogin>("/admin/login", {
+      apiCall<ResLogin>("/auth/login", {
         method: "POST",
         body: JSON.stringify(credentials),
       }),
@@ -40,7 +40,7 @@ export const useLogout = () => {
 
   return useMutation({
     mutationFn: () =>
-      apiCall("/admin/logout", {
+      apiCall("/auth/logout", {
         method: "POST",
       }),
     onSuccess: (data) => {
@@ -58,7 +58,7 @@ export const useSetup2Fa = () => {
   return useMutation({
     mutationFn: (credentials: { _id: string }) =>
       apiCall<{ secret: string; qrCodeUrl: string }>(
-        `/admin/2fa/setup/${credentials._id}`,
+        `/auth/2fa/setup/${credentials._id}`,
         {
           method: "POST",
         },
@@ -71,7 +71,7 @@ export const useSetup2Fa = () => {
 export const useActive2Fa = () => {
   return useMutation({
     mutationFn: (credentials: { token: string; _id: string }) =>
-      apiCall<ResActive2Fa>(`/admin/2fa/active/${credentials._id}`, {
+      apiCall<ResActive2Fa>(`/auth/2fa/active/${credentials._id}`, {
         method: "POST",
         body: JSON.stringify(credentials),
       }),
@@ -87,7 +87,7 @@ export const useVerify2Fa = () => {
 
   return useMutation({
     mutationFn: (credentials: { token: string; _id: string }) =>
-      apiCall<ResVerify2Fa>(`/admin/2fa/verify/${credentials._id}`, {
+      apiCall<ResVerify2Fa>(`/auth/2fa/verify/${credentials._id}`, {
         method: "POST",
         body: JSON.stringify(credentials),
       }),
@@ -125,7 +125,7 @@ export const useVerify2Fa = () => {
 // 🚪 GET - Get Me
 export const useGetMe = () => {
   return useMutation({
-    mutationFn: () => apiCall<IAdmin>("/admin/me", { method: "GET" }),
+    mutationFn: () => apiCall<IAdmin>("/auth/me", { method: "GET" }),
     onSuccess: () => {},
   });
 };
