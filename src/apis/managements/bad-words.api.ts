@@ -65,13 +65,13 @@ export const useGetMultiBadWords = (queries?: IQuery<IBadWord>) => {
   const normalizedQueries = queries ? JSON.stringify(queries) : "";
 
   return useQuery({
-    queryKey: ["admin", "bad-words", queries?.q, normalizedQueries],
+    queryKey: ["bad-words", queries?.q, normalizedQueries],
     queryFn: async () => {
       // Tạo query string từ queries object
       const queryString = queries ? buildQueryString(queries) : "";
       console.log("queryString:::", queryString);
 
-      const url = `/bad-words/${queryString ? `?${queryString}` : ""}`;
+      const url = `/bad-word/${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<IBadWord>>(url);
     },
 
@@ -91,11 +91,11 @@ export const useGetMultiBadWordMostUsed = (queries?: IQuery<IBadWord>) => {
   const normalizedQueries = queries ? JSON.stringify(queries) : "";
 
   return useQuery({
-    queryKey: ["admin", "bad-words", queries?.q, normalizedQueries],
+    queryKey: ["bad-words", queries?.q, normalizedQueries],
     queryFn: async () => {
       // Tạo query string từ queries object
       const queryString = queries ? buildQueryString(queries) : "";
-      const url = `/bad-words/most-used${queryString ? `?${queryString}` : ""}`;
+      const url = `/bad-word/most-used${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<IBadWord>>(url);
     },
 
@@ -115,11 +115,11 @@ export const useGetMultiUserViolations = (queries?: IQuery<IUserViolation>) => {
   const normalizedQueries = queries ? JSON.stringify(queries) : "";
 
   return useQuery({
-    queryKey: ["admin", "user-violations", queries?.q, normalizedQueries],
+    queryKey: ["user-violations", queries?.q, normalizedQueries],
     queryFn: async () => {
       // Tạo query string từ queries object
       const queryString = queries ? buildQueryString(queries) : "";
-      const url = `/user-violations${queryString ? `?${queryString}` : ""}`;
+      const url = `/user-violation${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<IUserViolation>>(url);
     },
 

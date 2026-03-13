@@ -9,11 +9,11 @@ export const useGetMultiCommunities = (queries?: IQuery<ICommunity>) => {
   const normalizedQueries = queries ? JSON.stringify(queries) : "";
 
   return useQuery({
-    queryKey: ["admin", "communities", queries?.q, normalizedQueries],
+    queryKey: ["communities", queries?.q, normalizedQueries],
     queryFn: async () => {
       // Tạo query string từ queries object
       const queryString = queries ? buildQueryString(queries) : "";
-      const url = `/admin/communities/${queryString ? `?${queryString}` : ""}`;
+      const url = `/community/${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<ICommunity>>(url);
     },
 

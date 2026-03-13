@@ -9,11 +9,11 @@ export const useGetMultiUsers = (queries?: IQuery<IUser>) => {
   const normalizedQueries = queries ? JSON.stringify(queries) : "";
 
   return useQuery({
-    queryKey: ["admin", "users", queries?.q, normalizedQueries],
+    queryKey: ["users", queries?.q, normalizedQueries],
     queryFn: async () => {
       // Tạo query string từ queries object
       const queryString = queries ? buildQueryString(queries) : "";
-      const url = `/admin/users/${queryString ? `?${queryString}` : ""}`;
+      const url = `/user/${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<IUser>>(url);
     },
 

@@ -9,11 +9,11 @@ export const useGetMultiMedia = (queries?: IQuery<IMedia>) => {
   const normalizedQueries = queries ? JSON.stringify(queries) : "";
 
   return useQuery({
-    queryKey: ["admin", "media", queries?.q, normalizedQueries],
+    queryKey: ["media", queries?.q, normalizedQueries],
     queryFn: async () => {
       // Tạo query string từ queries object
       const queryString = queries ? buildQueryString(queries) : "";
-      const url = `/admin/media/${queryString ? `?${queryString}` : ""}`;
+      const url = `/media/${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<IMedia>>(url);
     },
 

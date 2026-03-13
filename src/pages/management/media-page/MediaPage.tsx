@@ -69,7 +69,6 @@ function DotBadge({ status }: { status: EMediaStatus }) {
 
 function MediaItem({ media }: { media: IMedia }) {
   const { file_type, url, file_name, file_size, status } = media;
-  console.log("media :::", media);
 
   const user = media.user_id as unknown as IUser;
   const [openDelete, setOpenDelete] = useState(false);

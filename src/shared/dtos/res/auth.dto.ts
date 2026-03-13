@@ -12,7 +12,6 @@ export type ResActive2Fa = {
 };
 
 export type ResVerify2Fa = {
-  access_token: string;
-  refresh_token: string;
+  token: string;
   two_factor_session_enabled: boolean;
 };

@@ -47,7 +47,10 @@ export const useLogout = () => {
       if (data.statusCode === 200) {
         // Lưu token
         deleteStoredClient();
-        navigate("/", { replace: true });
+        setTimeout(() => {
+          console.log('navigate("/login", { replace: true });');
+          navigate("/login", { replace: true });
+        }, 1000);
       }
     },
   });
@@ -97,14 +100,7 @@ export const useVerify2Fa = () => {
       if (data.statusCode === 200) {
         if (data.metadata?.two_factor_session_enabled) {
           // Lưu token
-          localStorage.setItem(
-            "access_token",
-            data.metadata?.access_token || "",
-          );
-          localStorage.setItem(
-            "refresh_token",
-            data.metadata?.refresh_token || "",
-          );
+          localStorage.setItem("access_token", data.metadata?.token || "");
 
           // Nếu đăng nhập thành công thì gọi api getMe lưu vào Store global
           (async () => {
