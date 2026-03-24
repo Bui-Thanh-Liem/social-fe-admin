@@ -7,7 +7,7 @@ export function ShowCommunity({ community }: { community: ICommunity }) {
         <img
           src={community?.cover?.url}
           alt={community?.name}
-          className="h-10 w-12 rounded border border-gray-50"
+          className="h-12 w-12 rounded-full border border-gray-50"
         />
       )}
       <a
