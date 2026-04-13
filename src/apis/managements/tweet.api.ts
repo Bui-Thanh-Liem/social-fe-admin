@@ -10,11 +10,11 @@ export const useGetMultiTweets = (queries?: IQuery<IUser>) => {
   const normalizedQueries = queries ? JSON.stringify(queries) : "";
 
   return useQuery({
-    queryKey: ["tweets", queries?.q, normalizedQueries],
+    queryKey: ["private/tweets", queries?.q, normalizedQueries],
     queryFn: async () => {
       // Tạo query string từ queries object
       const queryString = queries ? buildQueryString(queries) : "";
-      const url = `/tweet/${queryString ? `?${queryString}` : ""}`;
+      const url = `/private/tweets/${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<ITweet>>(url);
     },
 

@@ -12,7 +12,7 @@ export const useCreateBadWords = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (body: ActionBadWordDto) =>
-      apiCall<IBadWord>("/bad-words", {
+      apiCall<IBadWord>("/private/bad-words", {
         method: "POST",
         body: JSON.stringify(body),
       }),
@@ -30,7 +30,7 @@ export const useUpdateBadWords = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ _id, body }: { body: ActionBadWordDto; _id: string }) =>
-      apiCall<IBadWord>(`/bad-words/${_id}`, {
+      apiCall<IBadWord>(`/private/bad-words/${_id}`, {
         method: "PATCH",
         body: JSON.stringify(body),
       }),
@@ -48,7 +48,7 @@ export const useDeleteBadWords = () => {
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (bad_word_id: string) =>
-      apiCall<IBadWord>(`/bad-words/${bad_word_id}`, {
+      apiCall<IBadWord>(`/private/bad-words/${bad_word_id}`, {
         method: "DELETE",
       }),
     onSuccess: () => {
@@ -71,7 +71,7 @@ export const useGetMultiBadWords = (queries?: IQuery<IBadWord>) => {
       const queryString = queries ? buildQueryString(queries) : "";
       console.log("queryString:::", queryString);
 
-      const url = `/bad-word/${queryString ? `?${queryString}` : ""}`;
+      const url = `/private/bad-words/${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<IBadWord>>(url);
     },
 
@@ -95,7 +95,7 @@ export const useGetMultiBadWordMostUsed = (queries?: IQuery<IBadWord>) => {
     queryFn: async () => {
       // Tạo query string từ queries object
       const queryString = queries ? buildQueryString(queries) : "";
-      const url = `/bad-word/most-used${queryString ? `?${queryString}` : ""}`;
+      const url = `/private/bad-words/most-used${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<IBadWord>>(url);
     },
 
@@ -119,7 +119,7 @@ export const useGetMultiUserViolations = (queries?: IQuery<IUserViolation>) => {
     queryFn: async () => {
       // Tạo query string từ queries object
       const queryString = queries ? buildQueryString(queries) : "";
-      const url = `/user-violation${queryString ? `?${queryString}` : ""}`;
+      const url = `/private/user-violations${queryString ? `?${queryString}` : ""}`;
       return apiCall<ResMultiType<IUserViolation>>(url);
     },
 
