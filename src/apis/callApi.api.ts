@@ -1,6 +1,6 @@
 import type { OkResponse } from "~/shared/classes/response.class";
 import { useAdminStore } from "~/stores/useAdminStore";
-import { deleteStoredClient } from "~/utils/deleteStoredClient";
+import { deleteStorageClient } from "~/utils/deleteStoredClient";
 
 const apiUrl = import.meta.env.VITE_SERVER_API_URL;
 const apiKey = import.meta.env.VITE_API_KEY;
@@ -51,7 +51,7 @@ export const apiCall = async <T>(
     result.statusCode === 401
     // result.message === "TokenExpiredError: jwt expired"
   ) {
-    deleteStoredClient();
+    deleteStorageClient();
     console.log("Token đã hết hạn. Vui lòng đăng nhập lại.");
 
     // // Fix: Get refresh_token, not access_token again
@@ -90,7 +90,7 @@ export const apiCall = async <T>(
     //   result = await response.json();
     // } else {
     //   // If refresh fails, redirect to login or handle accordingly
-    //   deleteStoredClient();
+    //   deleteStorageClient();
 
     //   // You might want to redirect to login page here
     //   console.log("Lỗi khi gọi api refresh token:::", resRefreshToken);

@@ -1,5 +1,5 @@
 import { Badge } from "~/components/ui/badge";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils/cn.util";
 import { EActionBadWord, EPriorityBadWord } from "~/shared/enums/common.enum";
 
 export function StatusBadge({ status }: { status: EPriorityBadWord }) {

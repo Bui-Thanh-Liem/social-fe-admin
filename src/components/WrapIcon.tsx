@@ -1,5 +1,5 @@
 import type { ReactNode, MouseEventHandler } from "react";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils/cn.util";
 
 type PropWrapIconType = {
   children: ReactNode;
@@ -12,7 +12,7 @@ export function WrapIcon({ onClick, children, className }: PropWrapIconType) {
     <div
       className={cn(
         "p-2 rounded-full bg-white hover:bg-gray-100 inline-block transition-all cursor-pointer",
-        className
+        className,
       )}
       onClick={onClick}
     >

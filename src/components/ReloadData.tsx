@@ -1,5 +1,5 @@
 import { RotateCcw } from "lucide-react";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils/cn.util";
 import { Button } from "./ui/button";
 
 export function ReloadData({

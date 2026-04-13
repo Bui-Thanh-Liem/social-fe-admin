@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Textarea } from "~/components/ui/textarea";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils/cn.util";
 import { EUserStatus } from "~/shared/enums/status.enum";
 import type { IMediaBare } from "~/shared/interfaces/media.interface";
 import type { IUser, IUserStatus } from "~/shared/interfaces/user.interface";

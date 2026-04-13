@@ -16,7 +16,7 @@ import {
   TableHeader,
   TableRow,
 } from "./ui/table";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils/cn.util";
 
 /* ================= TYPES ================= */
 

@@ -8,8 +8,8 @@ import type {
 } from "~/shared/dtos/res/auth.dto";
 import type { IAdmin } from "~/shared/interfaces/admin.interface";
 import { useAdminStore } from "~/stores/useAdminStore";
-import { deleteStoredClient } from "~/utils/deleteStoredClient";
 import { apiCall } from "./callApi.api";
+import { deleteStorageClient } from "~/utils/deleteStoredClient";
 
 // 🔐 POST - Login
 export const useLogin = () => {
@@ -46,7 +46,7 @@ export const useLogout = () => {
     onSuccess: (data) => {
       if (data.statusCode === 200) {
         // Lưu token
-        deleteStoredClient();
+        deleteStorageClient();
         setTimeout(() => {
           console.log('navigate("/login", { replace: true });');
           navigate("/login", { replace: true });

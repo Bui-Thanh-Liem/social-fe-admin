@@ -19,7 +19,7 @@ import {
 
 import { Field, FieldLabel } from "~/components/ui/field";
 import { getPaginationPages } from "~/utils/getPaginationPages";
-import { cn } from "~/lib/utils";
+import { cn } from "~/utils/cn.util";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 export interface PaginationProps {
