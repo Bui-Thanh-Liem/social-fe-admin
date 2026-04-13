@@ -17,7 +17,7 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: (credentials: LoginAuthDto) =>
-      apiCall<ResLogin>("/auth/login", {
+      apiCall<ResLogin>("/auth-admin/login", {
         method: "POST",
         body: JSON.stringify(credentials),
       }),
@@ -40,7 +40,7 @@ export const useLogout = () => {
 
   return useMutation({
     mutationFn: () =>
-      apiCall("/auth/logout", {
+      apiCall("/auth-admin/logout", {
         method: "POST",
       }),
     onSuccess: (data) => {
@@ -61,7 +61,7 @@ export const useSetup2Fa = () => {
   return useMutation({
     mutationFn: (credentials: { _id: string }) =>
       apiCall<{ secret: string; qrCodeUrl: string }>(
-        `/auth/2fa/setup/${credentials._id}`,
+        `/auth-admin/2fa/setup/${credentials._id}`,
         {
           method: "POST",
         },
@@ -90,7 +90,7 @@ export const useVerify2Fa = () => {
 
   return useMutation({
     mutationFn: (credentials: { token: string; _id: string }) =>
-      apiCall<ResVerify2Fa>(`/auth/2fa/verify/${credentials._id}`, {
+      apiCall<ResVerify2Fa>(`/auth-admin/2fa/verify/${credentials._id}`, {
         method: "POST",
         body: JSON.stringify(credentials),
       }),
@@ -121,7 +121,7 @@ export const useVerify2Fa = () => {
 // 🚪 GET - Get Me
 export const useGetMe = () => {
   return useMutation({
-    mutationFn: () => apiCall<IAdmin>("/auth/me", { method: "GET" }),
+    mutationFn: () => apiCall<IAdmin>("/auth-admin/me", { method: "GET" }),
     onSuccess: () => {},
   });
 };
