@@ -24,6 +24,7 @@ import type { IUser } from "~/shared/interfaces/user.interface";
 import { motion } from "framer-motion";
 import { ShowUser } from "~/components/ShowUser";
 import { ShowCommunity } from "~/components/ShowCommunity";
+import { formatTimeAgo } from "~/utils/date-time";
 
 export function StatusBadge({ status }: { status: ETweetStatus }) {
   return (
@@ -123,12 +124,19 @@ export function TweetPage() {
         );
       },
     },
-
     {
       title: "Trạng thái",
       dataIndex: "status",
       width: 200,
       render: (value: ETweetStatus) => <StatusBadge status={value} />,
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "created_at",
+      width: 200,
+      render: (value: Date) => (
+        <span>{formatTimeAgo(value as unknown as string)}</span>
+      ),
     },
   ];
 
