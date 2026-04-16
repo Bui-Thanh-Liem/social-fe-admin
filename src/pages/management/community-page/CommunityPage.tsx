@@ -2,7 +2,7 @@ import { MoreHorizontalIcon } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useGetMultiCommunities } from "~/apis/managements/communities.api";
 import { Filter } from "~/components/Filter";
-import { Pagination_ } from "~/components/Pagination";
+import { Pagination_ } from "~/components/pagination";
 import { ReloadData } from "~/components/ReloadData";
 import { ShowCommunity } from "~/components/ShowCommunity";
 import { ShowUser } from "~/components/ShowUser";

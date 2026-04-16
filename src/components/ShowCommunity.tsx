@@ -11,7 +11,7 @@ export function ShowCommunity({ community }: { community: ICommunity }) {
         />
       )}
       <a
-        href={community?.slug}
+        href={`${import.meta.env.VITE_CLIENT_URL_MAIN}/communities/${community?.slug}`}
         target="_blank"
         rel="noopener noreferrer"
         className="line-clamp-1 hover:underline"

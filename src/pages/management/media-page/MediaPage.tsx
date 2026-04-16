@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useGetMultiMedia } from "~/apis/managements/media.api";
 import { Filter } from "~/components/Filter";
-import { Pagination_ } from "~/components/Pagination";
+import { Pagination_ } from "~/components/pagination";
 import { ReloadData } from "~/components/ReloadData";
 import {
   AlertDialog,

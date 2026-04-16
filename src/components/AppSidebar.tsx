@@ -70,8 +70,8 @@ export function AppSidebar() {
   return (
     <Sidebar collapsible="icon">
       {/* ===== HEADER ===== */}
-      <SidebarHeader className="px-4 py-3">
-        <Logo size={20} />
+      <SidebarHeader className="-ml-1">
+        <Logo size={40} />
       </SidebarHeader>
 
       {/* ===== CONTENT ===== */}

@@ -12,7 +12,7 @@ export function ShowUser({ user }: { user: IUser }) {
       <div>
         <div className="flex items-center gap-x-2">
           <a
-            href={user.username}
+            href={`${import.meta.env.VITE_CLIENT_URL_MAIN}/${user.username}`}
             target="_blank"
             rel="noopener noreferrer"
             className="hover:underline line-clamp-1"

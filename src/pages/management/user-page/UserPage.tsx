@@ -2,7 +2,7 @@ import { MoreHorizontalIcon } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useGetMultiUsers } from "~/apis/managements/user.api";
 import { Filter } from "~/components/Filter";
-import { Pagination_ } from "~/components/Pagination";
+import { Pagination_ } from "~/components/pagination";
 import { ReloadData } from "~/components/ReloadData";
 import { ShowUser } from "~/components/ShowUser";
 import { Table_, type Column } from "~/components/Table_";

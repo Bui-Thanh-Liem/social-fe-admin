@@ -3,7 +3,7 @@ import { useSearchParams } from "react-router-dom";
 import { useGetMultiTweets } from "~/apis/managements/tweet.api";
 import { EditorCodeItem } from "~/components/EditorCode";
 import { Filter } from "~/components/Filter";
-import { Pagination_ } from "~/components/Pagination";
+import { Pagination_ } from "~/components/pagination";
 import { ReloadData } from "~/components/ReloadData";
 import { Table_, type Column } from "~/components/Table_";
 import { Badge } from "~/components/ui/badge";
