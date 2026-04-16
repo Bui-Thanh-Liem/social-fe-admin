@@ -11,7 +11,6 @@ import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import { Textarea } from "~/components/ui/textarea";
@@ -20,8 +19,10 @@ import { EUserStatus } from "~/shared/enums/status.enum";
 import type { IMediaBare } from "~/shared/interfaces/media.interface";
 import type { IUser, IUserStatus } from "~/shared/interfaces/user.interface";
 import { formatDateToDateVN } from "~/utils/date-time";
+import { ManageAccess } from "./ManageAccess";
+import { Remind } from "./Remind";
 
-export function StatusBadge({ status, reason }: IUserStatus) {
+export function StatusBadge({ status }: Pick<IUserStatus, "status">) {
   return (
     <>
       <Badge
@@ -29,12 +30,10 @@ export function StatusBadge({ status, reason }: IUserStatus) {
           "",
           status === EUserStatus.Active
             ? "bg-green-50 text-green-700 dark:bg-green-950 dark:text-green-300"
-            : status === EUserStatus.Block
-              ? "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300"
-              : "bg-black-50 text-black-700 dark:bg-black-950 dark:text-black-300",
+            : "bg-red-50 text-red-700 dark:bg-red-950 dark:text-red-300",
         )}
       >
-        {`${status} ${reason && "- " + reason}`}
+        {status}
       </Badge>
     </>
   );
@@ -78,7 +77,10 @@ export function UserPage() {
       dataIndex: "status",
       width: 250,
       render: (value: IUserStatus) => (
-        <StatusBadge status={value.status} reason={value.reason} />
+        <div>
+          <StatusBadge status={value.status} />
+          {value.reason && <p className="pl-2 line-clamp-2">{value.reason}</p>}
+        </div>
       ),
     },
     {
@@ -134,16 +136,6 @@ export function UserPage() {
   const total_page = data?.metadata?.total_page || 0;
   const total = data?.metadata?.total || 0;
 
-  //
-  const onEdit = (record: IUser) => {
-    console.log("Edit user:", record);
-  };
-
-  //
-  const onDelete = (record: IUser) => {
-    console.log("Delete user:", record);
-  };
-
   return (
     <div>
       {/*  */}
@@ -169,34 +161,32 @@ export function UserPage() {
         <Table_
           columns={columns}
           dataSource={users}
-          renderActions={(record) => (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="size-8">
-                  <MoreHorizontalIcon />
-                </Button>
-              </DropdownMenuTrigger>
+          renderActions={(record: IUser) => {
+            const statusRest = Object.values(EUserStatus).filter(
+              (status) => status !== record.status.status,
+            );
 
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => onEdit(record)}>
-                  Nhắc nhở
-                </DropdownMenuItem>
+            return (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="size-8">
+                    <MoreHorizontalIcon />
+                  </Button>
+                </DropdownMenuTrigger>
 
-                <DropdownMenuItem onClick={() => onEdit(record)}>
-                  Khoá tài khoản
-                </DropdownMenuItem>
-
-                {record.status !== "deleted" && (
-                  <DropdownMenuItem
-                    variant="destructive"
-                    onClick={() => onDelete(record)}
-                  >
-                    Xóa
-                  </DropdownMenuItem>
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
+                <DropdownMenuContent align="end">
+                  <Remind record={record} />
+                  {statusRest.map((status) => (
+                    <ManageAccess
+                      key={status}
+                      record={record}
+                      status={status}
+                    />
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            );
+          }}
         />
       </div>
 

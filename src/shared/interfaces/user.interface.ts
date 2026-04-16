@@ -12,6 +12,7 @@ export interface IUser extends IBase {
   email: string;
   password: string;
   day_of_birth: Date;
+  status: IUserStatus;
   email_verify_token?: string;
   forgot_password_token?: string;
   verify: EAuthVerifyStatus;
@@ -23,6 +24,7 @@ export interface IUser extends IBase {
   username?: string;
   avatar?: IMediaBare;
   cover_photo?: IMediaBare;
+  star?: number; // thể hiện độ uy tín
   // settings: IUserSettings
 
   //
