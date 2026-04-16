@@ -73,7 +73,7 @@ export function UserMostUsedTable() {
       </div>
 
       {/*  */}
-      <div className="max-h-[calc(100vh-34rem)] overflow-y-auto pr-1 mt-3">
+      <div className="max-h-[calc(100vh-40rem)] overflow-y-auto pr-1 mt-3">
         <Table_
           columns={columns}
           dataSource={userViolations}
