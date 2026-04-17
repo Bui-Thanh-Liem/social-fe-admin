@@ -18,8 +18,8 @@ import { cn } from "~/utils/cn.util";
 import { EUserStatus } from "~/shared/enums/status.enum";
 import type { IMediaBare } from "~/shared/interfaces/media.interface";
 import type { IUser, IUserStatus } from "~/shared/interfaces/user.interface";
-import { formatDateToDateVN } from "~/utils/date-time";
-import { ManageAccess } from "./ManageAccess";
+import { formatDateToDateVN, formatTimeAgo } from "~/utils/date-time";
+import { ChangeStatus } from "./ChangeStatus";
 import { Remind } from "./Remind";
 
 export function StatusBadge({ status }: Pick<IUserStatus, "status">) {
@@ -53,6 +53,7 @@ export function UserPage() {
       title: "Ảnh bìa",
       dataIndex: "cover_photo",
       fixed: "left",
+      width: 60,
       render: (value: IMediaBare, record: IUser) => (
         <img
           className="h-10 w-12 rounded"
@@ -75,7 +76,7 @@ export function UserPage() {
     {
       title: "Trạng thái",
       dataIndex: "status",
-      width: 250,
+      width: 200,
       render: (value: IUserStatus) => (
         <div>
           <StatusBadge status={value.status} />
@@ -92,42 +93,53 @@ export function UserPage() {
       ),
     },
     {
-      title: "Vị trí",
+      title: "Vị trí và website",
       dataIndex: "location",
       width: 200,
+      render: (value: string, record: IUser) => (
+        <div>
+          <p>{value || "-"}</p>
+          {record.website ? (
+            <a
+              href={record.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-500 underline line-clamp-1"
+            >
+              {record.website}
+            </a>
+          ) : (
+            "-"
+          )}
+        </div>
+      ),
     },
     {
-      title: "Website",
-      dataIndex: "website",
+      title: "Ngày tham gia",
+      dataIndex: "created_at",
       width: 200,
-      render: (value: string) => {
-        if (!value) return "-";
-        return (
-          <a
-            href={value}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-500 underline line-clamp-1"
-          >
-            {value}
-          </a>
-        );
-      },
+      render: (value: Date) => (
+        <span>{formatTimeAgo(value as unknown as string)}</span>
+      ),
     },
   ];
 
   //
   const [params] = useSearchParams();
-  const { page, limit, q, qf } = {
+  const { page, limit, q, qf, sd, ed } = {
     q: params.get("q") || "",
     page: params.get("page") || "1",
     qf: params.get("qf") || "[]",
     limit: params.get("limit") || "50",
+    sd: params.get("sd") || undefined,
+    ed: params.get("ed") || undefined,
   };
 
   //
   const { data, refetch, isLoading, isFetching } = useGetMultiUsers({
     q: q,
+    sd,
+    ed,
     page: page,
     limit: limit,
     qf: JSON.parse(qf),
@@ -150,7 +162,7 @@ export function UserPage() {
         filters={[
           {
             key: "status",
-            placeholder: "Trạng thái",
+            placeholder: "Chọn trạng thái",
             values: Object.values(EUserStatus),
           },
         ]}
@@ -162,10 +174,6 @@ export function UserPage() {
           columns={columns}
           dataSource={users}
           renderActions={(record: IUser) => {
-            const statusRest = Object.values(EUserStatus).filter(
-              (status) => status !== record.status.status,
-            );
-
             return (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -176,13 +184,7 @@ export function UserPage() {
 
                 <DropdownMenuContent align="end">
                   <Remind record={record} />
-                  {statusRest.map((status) => (
-                    <ManageAccess
-                      key={status}
-                      record={record}
-                      status={status}
-                    />
-                  ))}
+                  <ChangeStatus record={record} />
                 </DropdownMenuContent>
               </DropdownMenu>
             );

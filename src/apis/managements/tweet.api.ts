@@ -1,12 +1,15 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { apiCall } from "../callApi.api";
 import type { IQuery } from "~/shared/interfaces/common/query.interface";
 import type { ResMultiType } from "~/shared/types/response.type";
 import { buildQueryString } from "~/utils/buildQueryString";
-import type { IUser } from "~/shared/interfaces/user.interface";
 import type { ITweet } from "~/shared/interfaces/tweet.interface";
+import type {
+  AdminChangeTweetStatusDto,
+  AdminRemindTweetDto,
+} from "~/shared/dtos/req/tweet.dto";
 
-export const useGetMultiTweets = (queries?: IQuery<IUser>) => {
+export const useGetMultiTweets = (queries?: IQuery<ITweet>) => {
   const normalizedQueries = queries ? JSON.stringify(queries) : "";
 
   return useQuery({
@@ -26,5 +29,47 @@ export const useGetMultiTweets = (queries?: IQuery<IUser>) => {
     refetchOnReconnect: false,
     refetchInterval: false,
     networkMode: "online",
+  });
+};
+
+// 🔐 PATCH - change status tweet
+export const useChangeTweetStatus = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      _id,
+      body,
+    }: {
+      _id: string;
+      body: AdminChangeTweetStatusDto;
+    }) =>
+      apiCall<ITweet>(`/private/tweets/change-status/${_id}`, {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      }),
+    onSuccess: () => {
+      // Sau khi tạo bad word thành công thì invalidate cache
+      queryClient.invalidateQueries({
+        queryKey: ["private/tweets"],
+      });
+    },
+  });
+};
+
+// 🔐 PATCH - remind tweet
+export const useRemindTweet = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({ _id, body }: { _id: string; body: AdminRemindTweetDto }) =>
+      apiCall<ITweet>(`/private/tweets/remind/${_id}`, {
+        method: "PATCH",
+        body: JSON.stringify(body),
+      }),
+    onSuccess: () => {
+      // Sau khi tạo bad word thành công thì invalidate cache
+      queryClient.invalidateQueries({
+        queryKey: ["private/tweets"],
+      });
+    },
   });
 };

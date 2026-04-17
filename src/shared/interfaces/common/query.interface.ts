@@ -14,8 +14,8 @@ export interface IQuery<T> {
   t?: "top";
   f?: "media"; // trả về những tweet có media
   pf?: string; // people follow
-  sd?: Date;
-  ed?: Date;
+  sd?: string;
+  ed?: string;
 
   // Profile
   user_id?: string;

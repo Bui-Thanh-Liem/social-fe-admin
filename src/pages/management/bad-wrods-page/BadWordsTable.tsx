@@ -99,15 +99,16 @@ export function BadWordsTable() {
         filters={[
           {
             key: "priority",
-            placeholder: "mức độ",
+            placeholder: "Chọn mức độ",
             values: Object.values(EPriorityBadWord),
           },
           {
             key: "action",
-            placeholder: "hành động",
+            placeholder: "Chọn hành động",
             values: Object.values(EActionBadWord),
           },
         ]}
+        isDateRange={false}
       />
 
       {/*  */}

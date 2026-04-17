@@ -14,7 +14,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
-import { Textarea } from "~/components/ui/textarea";
 import { cn } from "~/utils/cn.util";
 import { ETweetStatus } from "~/shared/enums/status.enum";
 import type { ICommunity } from "~/shared/interfaces/community.interface";
@@ -25,6 +24,9 @@ import { motion } from "framer-motion";
 import { ShowUser } from "~/components/ShowUser";
 import { ShowCommunity } from "~/components/ShowCommunity";
 import { formatTimeAgo } from "~/utils/date-time";
+import { ContentExpanded } from "./Content";
+import { ChangeStatus } from "./ChangeStatus";
+import { Remind } from "./Remind";
 
 export function StatusBadge({ status }: { status: ETweetStatus }) {
   return (
@@ -49,7 +51,7 @@ export function TweetPage() {
   //
   const columns: Column[] = [
     {
-      title: "Người dùng - Cộng đồng",
+      title: "Người đăng - Cá nhân/Cộng đồng",
       dataIndex: "user_id",
       width: 250,
       render: (user: IUser, record: ITweet) => {
@@ -59,7 +61,11 @@ export function TweetPage() {
         return (
           <div className="space-y-2">
             <ShowUser user={user} />
-            <ShowCommunity community={community} />
+            {community ? (
+              <ShowCommunity community={community} />
+            ) : (
+              <span className="text-muted-foreground">-</span>
+            )}
           </div>
         );
       },
@@ -105,7 +111,12 @@ export function TweetPage() {
       render: (value: string, tweet: ITweet) => {
         return (
           <div className="space-y-2">
-            <Textarea value={value} readOnly placeholder="Không có" />
+            <ContentExpanded
+              content={value}
+              mentions={tweet.mentions as unknown as IUser[]}
+              bg={""}
+              text={""}
+            />
             <motion.div layout className="my-2 flex gap-2 flex-wrap">
               {tweet?.codes &&
                 tweet.codes?.length &&
@@ -142,16 +153,20 @@ export function TweetPage() {
 
   //
   const [params] = useSearchParams();
-  const { page, limit, q, qf } = {
+  const { page, limit, q, qf, ed, sd } = {
     q: params.get("q") || "",
     page: params.get("page") || "1",
     qf: params.get("qf") || "[]",
     limit: params.get("limit") || "50",
+    ed: params.get("ed") || undefined,
+    sd: params.get("sd") || undefined,
   };
 
   //
   const { data, refetch, isLoading, isFetching } = useGetMultiTweets({
     q,
+    ed,
+    sd,
     page: page,
     limit: limit,
     qf: JSON.parse(qf),
@@ -159,11 +174,6 @@ export function TweetPage() {
   const tweets = data?.metadata?.items || [];
   const total_page = data?.metadata?.total_page || 0;
   const total = data?.metadata?.total || 0;
-
-  //
-  const onEdit = (record: ITweet) => {
-    console.log("Edit tweet:", record);
-  };
 
   //
   const onDelete = (record: ITweet) => {
@@ -183,7 +193,7 @@ export function TweetPage() {
         filters={[
           {
             key: "status",
-            placeholder: "Trạng thái",
+            placeholder: "Chọn trạng thái",
             values: Object.values(ETweetStatus),
           },
         ]}
@@ -204,20 +214,16 @@ export function TweetPage() {
               </DropdownMenuTrigger>
 
               <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={() => onEdit(record)}>
-                  Nhắc nhở
-                </DropdownMenuItem>
+                <Remind record={record} />
 
-                <DropdownMenuItem onClick={() => onEdit(record)}>
-                  Gỡ bài viết
-                </DropdownMenuItem>
+                <ChangeStatus record={record} />
 
                 {record.status !== "deleted" && (
                   <DropdownMenuItem
                     variant="destructive"
                     onClick={() => onDelete(record)}
                   >
-                    Xóa
+                    Gỡ bài viết
                   </DropdownMenuItem>
                 )}
               </DropdownMenuContent>

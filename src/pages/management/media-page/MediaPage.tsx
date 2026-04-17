@@ -95,7 +95,7 @@ function MediaItem({ media }: { media: IMedia }) {
             loading="lazy"
             src={url}
             alt={media?.file_name}
-            className="object-contain select-none h-full w-full"
+            className="object-cover select-none h-full w-full"
             onError={(e) => {
               e.currentTarget.src = "/favicon.png";
             }}
@@ -154,9 +154,13 @@ function MediaItem({ media }: { media: IMedia }) {
           <AlertDialogHeader>
             <AlertDialogTitle>Thông tin chi tiết</AlertDialogTitle>
             <AlertDialogDescription className="space-y-4">
-              <div className="rounded-lg overflow-hidden max-h-96">
+              <div className="rounded-lg overflow-hidden max-h-[50vh]">
                 {file_type?.includes("video/") ? (
-                  <video src={url} controls className="select-none" />
+                  <video
+                    src={url}
+                    controls
+                    className="select-none w-full h-full"
+                  />
                 ) : file_type?.includes("image/") ? (
                   <img
                     loading="lazy"
@@ -221,10 +225,12 @@ function MediaItem({ media }: { media: IMedia }) {
 export function MediaPage() {
   //
   const [params] = useSearchParams();
-  const { page, limit, qf } = {
+  const { page, limit, qf, sd, ed } = {
     page: params.get("page") || "1",
     qf: params.get("qf") || "[]",
     limit: params.get("limit") || "50",
+    ed: params.get("ed") || undefined,
+    sd: params.get("sd") || undefined,
   };
 
   //
@@ -232,6 +238,8 @@ export function MediaPage() {
     page: page,
     limit: limit,
     qf: JSON.parse(qf),
+    sd: sd,
+    ed: ed,
   });
   const medias = data?.metadata?.items || [];
   const total_page = data?.metadata?.total_page || 0;
@@ -251,7 +259,7 @@ export function MediaPage() {
         filters={[
           {
             key: "status",
-            placeholder: "Trạng thái",
+            placeholder: "Chọn trạng thái",
             values: Object.values(EMediaStatus),
           },
         ]}
