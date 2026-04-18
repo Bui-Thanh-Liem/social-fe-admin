@@ -1,7 +1,7 @@
 import { MoreHorizontalIcon } from "lucide-react";
 import { useGetMultiUserViolations } from "~/apis/managements/bad-words.api";
-import { ReloadData } from "~/components/ReloadData";
-import { Table_, type Column } from "~/components/Table_";
+import { ReloadData } from "~/components/reload-data";
+import { Table_, type Column } from "~/components/table_";
 import { Avatar, AvatarFallback, AvatarImage } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {

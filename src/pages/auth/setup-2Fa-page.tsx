@@ -3,7 +3,7 @@ import { ArrowLeft, Copy } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useActive2Fa, useSetup2Fa } from "~/apis/auth.api";
-import { Logo } from "~/components/Logo";
+import { Logo } from "~/components/logo";
 import { Button } from "~/components/ui/button";
 import { Field, FieldLabel } from "~/components/ui/field";
 import {
@@ -12,9 +12,9 @@ import {
   InputOTPSlot,
 } from "~/components/ui/input-otp";
 import { Label } from "~/components/ui/label";
-import { WrapIcon } from "~/components/WrapIcon";
+import { WrapIcon } from "~/components/wrap-icon";
 import type { ResActive2Fa } from "~/shared/dtos/res/auth.dto";
-import { handleResponse } from "~/utils/toast";
+import { handleResponse } from "~/utils/toast.util";
 
 export function Setup2FaPage() {
   const apiSetup2Fa = useSetup2Fa();

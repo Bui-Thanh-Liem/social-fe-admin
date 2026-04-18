@@ -12,7 +12,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "./ui/select";
-import { WrapIcon } from "./WrapIcon";
+import { WrapIcon } from "./wrap-icon";
 
 /* ---------------------------------- */
 /* Animation preset (mượt, tự nhiên) */

@@ -1,11 +1,11 @@
 import { MoreHorizontalIcon } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useGetMultiTweets } from "~/apis/managements/tweet.api";
-import { EditorCodeItem } from "~/components/EditorCode";
-import { Filter } from "~/components/Filter";
+import { EditorCodeItem } from "~/components/editor-code";
+import { Filter } from "~/components/filter";
 import { Pagination_ } from "~/components/pagination";
-import { ReloadData } from "~/components/ReloadData";
-import { Table_, type Column } from "~/components/Table_";
+import { ReloadData } from "~/components/reload-data";
+import { Table_, type Column } from "~/components/table_";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -21,12 +21,12 @@ import type { IMediaBare } from "~/shared/interfaces/media.interface";
 import type { ITweet } from "~/shared/interfaces/tweet.interface";
 import type { IUser } from "~/shared/interfaces/user.interface";
 import { motion } from "framer-motion";
-import { ShowUser } from "~/components/ShowUser";
-import { ShowCommunity } from "~/components/ShowCommunity";
-import { formatTimeAgo } from "~/utils/date-time";
-import { ContentExpanded } from "./Content";
-import { ChangeStatus } from "./ChangeStatus";
-import { Remind } from "./Remind";
+import { ShowUser } from "~/components/show-user";
+import { ShowCommunity } from "~/components/show-community";
+import { formatTimeAgo } from "~/utils/date-time.util";
+import { ContentExpanded } from "./content";
+import { ChangeStatus } from "./change-status";
+import { Remind } from "./remind";
 
 export function StatusBadge({ status }: { status: ETweetStatus }) {
   return (

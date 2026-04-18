@@ -1,18 +1,18 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import NotFound from "./components/NotFound";
-import { RedirectIfAuthenticated } from "./components/RedirectIfAuthenticated";
-import { RedirectIfNotAuthenticated } from "./components/RedirectIfNotAuthenticated";
-import { AuthLayout } from "./layouts/AuthLayout";
-import { DashboardLayout } from "./layouts/DashboardLayout";
-import { Setup2FaPage } from "./pages/auth/Setup2FaPage";
-import { BadWordsPage } from "./pages/management/bad-wrods-page/BadWordsPage";
-import { CommunityPage } from "./pages/management/community-page/CommunityPage";
-import { HomePage } from "./pages/management/home-page/HomePage";
-import { MediaPage } from "./pages/management/media-page/MediaPage";
-import { TweetPage } from "./pages/management/tweet-page/TweetPage";
-import { UserPage } from "./pages/management/user-page/UserPage";
-import { LoginPage } from "./pages/auth/LoginPage";
+import NotFound from "./components/not-found";
+import { RedirectIfAuthenticated } from "./components/redirect-if-authenticated";
+import { RedirectIfNotAuthenticated } from "./components/redirect-ff-not-authenticated";
+import { AuthLayout } from "./layouts/auth-layout";
+import { DashboardLayout } from "./layouts/dashboard-layout";
+import { Setup2FaPage } from "./pages/auth/setup-2Fa-page";
+import { BadWordsPage } from "./pages/management/bad-wrods-page/badwords-page";
+import { CommunityPage } from "./pages/management/community-page/community-page";
+import { HomePage } from "./pages/management/home-page/home-page";
+import { MediaPage } from "./pages/management/media-page/media-page";
+import { TweetPage } from "./pages/management/tweet-page/tweet-page";
+import { UserPage } from "./pages/management/user-page/user-page";
+import { LoginPage } from "./pages/auth/login-page";
 
 // Router config
 const router = createBrowserRouter([

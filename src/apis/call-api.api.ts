@@ -1,6 +1,6 @@
 import type { OkResponse } from "~/shared/classes/response.class";
-import { useAdminStore } from "~/stores/useAdminStore";
-import { deleteStorageClient } from "~/utils/deleteStoredClient";
+import { useAdminStore } from "~/storage/use-admin.storage";
+import { deleteStorageClient } from "~/utils/delete-storage-client.util";
 
 const apiUrl = import.meta.env.VITE_SERVER_API_URL;
 const apiKey = import.meta.env.VITE_API_KEY;

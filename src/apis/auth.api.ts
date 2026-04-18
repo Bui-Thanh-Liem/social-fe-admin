@@ -7,9 +7,9 @@ import type {
   ResVerify2Fa,
 } from "~/shared/dtos/res/auth.dto";
 import type { IAdmin } from "~/shared/interfaces/admin.interface";
-import { useAdminStore } from "~/stores/useAdminStore";
-import { apiCall } from "./callApi.api";
-import { deleteStorageClient } from "~/utils/deleteStoredClient";
+import { useAdminStore } from "~/storage/use-admin.storage";
+import { apiCall } from "./call-api.api";
+import { deleteStorageClient } from "~/utils/delete-storage-client.util";
 
 // 🔐 POST - Login
 export const useLogin = () => {

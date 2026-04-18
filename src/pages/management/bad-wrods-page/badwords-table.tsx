@@ -1,13 +1,13 @@
 import { EActionBadWord, EPriorityBadWord } from "~/shared/enums/common.enum";
 import type { IBadWord } from "~/shared/interfaces/bad-words.interface";
-import { ActionBadge, StatusBadge } from "./Badge";
+import { ActionBadge, StatusBadge } from "./badge";
 import {
   useDeleteBadWords,
   useGetMultiBadWords,
 } from "~/apis/managements/bad-words.api";
 import { useState } from "react";
-import { BadWordsAction } from "./BadWordsAction";
-import { Table_, type Column } from "~/components/Table_";
+import { BadWordsAction } from "./badwords-action";
+import { Table_, type Column } from "~/components/table_";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,9 +16,9 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { Button } from "~/components/ui/button";
 import { MoreHorizontalIcon } from "lucide-react";
-import { ReloadData } from "~/components/ReloadData";
+import { ReloadData } from "~/components/reload-data";
 import { useSearchParams } from "react-router-dom";
-import { Filter } from "~/components/Filter";
+import { Filter } from "~/components/filter";
 import { Pagination_ } from "~/components/pagination";
 
 export function BadWordsTable() {

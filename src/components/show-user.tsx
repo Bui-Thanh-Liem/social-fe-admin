@@ -1,7 +1,7 @@
 import type { IUser } from "~/shared/interfaces/user.interface";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { VerifyIcon } from "./icons/verify";
-import { StarPrestige } from "./Star";
+import { StarPrestige } from "./star";
 
 export function ShowUser({ user }: { user: IUser }) {
   return (

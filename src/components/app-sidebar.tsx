@@ -20,7 +20,7 @@ import {
   WholeWord,
 } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
-import { Logo } from "./Logo";
+import { Logo } from "./logo";
 
 const overviewMenuItems = [
   {

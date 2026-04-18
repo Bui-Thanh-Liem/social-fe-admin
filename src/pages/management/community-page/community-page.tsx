@@ -1,12 +1,12 @@
 import { MoreHorizontalIcon } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useGetMultiCommunities } from "~/apis/managements/communities.api";
-import { Filter } from "~/components/Filter";
+import { Filter } from "~/components/filter";
 import { Pagination_ } from "~/components/pagination";
-import { ReloadData } from "~/components/ReloadData";
-import { ShowCommunity } from "~/components/ShowCommunity";
-import { ShowUser } from "~/components/ShowUser";
-import { Table_, type Column } from "~/components/Table_";
+import { ReloadData } from "~/components/reload-data";
+import { ShowCommunity } from "~/components/show-community";
+import { ShowUser } from "~/components/show-user";
+import { Table_, type Column } from "~/components/table_";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -25,7 +25,7 @@ import type { ICommunity } from "~/shared/interfaces/community.interface";
 import type { IMediaBare } from "~/shared/interfaces/media.interface";
 import type { IUser } from "~/shared/interfaces/user.interface";
 import { cn } from "~/utils/cn.util";
-import { formatTimeAgo } from "~/utils/date-time";
+import { formatTimeAgo } from "~/utils/date-time.util";
 
 export function CommunityTag({
   text,

@@ -1,6 +1,6 @@
-import { MostUsedTable } from "./MostUsedTable";
-import { BadWordsTable } from "./BadWordsTable";
-import { UserMostUsedTable } from "./UserMostUsedTable";
+import { MostUsedTable } from "./most-used-table";
+import { BadWordsTable } from "./badwords-table";
+import { UserMostUsedTable } from "./user-most-used-table";
 
 export function BadWordsPage() {
   return (

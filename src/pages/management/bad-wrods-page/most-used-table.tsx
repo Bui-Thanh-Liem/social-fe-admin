@@ -1,8 +1,8 @@
 import { useGetMultiBadWordMostUsed } from "~/apis/managements/bad-words.api";
-import { Table_, type Column } from "~/components/Table_";
+import { Table_, type Column } from "~/components/table_";
 import type { EPriorityBadWord } from "~/shared/enums/common.enum";
-import { StatusBadge } from "./Badge";
-import { ReloadData } from "~/components/ReloadData";
+import { StatusBadge } from "./badge";
+import { ReloadData } from "~/components/reload-data";
 
 export function MostUsedTable() {
   //

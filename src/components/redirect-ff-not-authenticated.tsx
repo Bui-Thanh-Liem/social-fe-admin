@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { useAdminStore } from "../stores/useAdminStore";
+import { useAdminStore } from "../storage/use-admin.storage";
 
 export function RedirectIfNotAuthenticated({
   children,

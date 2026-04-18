@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import { useLogin, useVerify2Fa } from "~/apis/auth.api";
-import { Logo } from "~/components/Logo";
+import { Logo } from "~/components/logo";
 import { Button } from "~/components/ui/button";
 import { Field } from "~/components/ui/field";
 import { InputMain } from "~/components/ui/input";
@@ -15,12 +15,12 @@ import {
   InputOTPSlot,
 } from "~/components/ui/input-otp";
 import { Label } from "~/components/ui/label";
-import { WrapIcon } from "~/components/WrapIcon";
+import { WrapIcon } from "~/components/wrap-icon";
 import {
   LoginAuthDtoSchema,
   type LoginAuthDto,
 } from "~/shared/dtos/req/auth.dto";
-import { handleResponse } from "~/utils/toast";
+import { handleResponse } from "~/utils/toast.util";
 
 export function LoginPage() {
   //

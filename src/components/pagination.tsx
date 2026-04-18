@@ -18,7 +18,7 @@ import {
 } from "~/components/ui/select";
 
 import { Field, FieldLabel } from "~/components/ui/field";
-import { getPaginationPages } from "~/utils/getPaginationPages";
+import { getPaginationPages } from "~/utils/get-pagination-page.util";
 import { cn } from "~/utils/cn.util";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 

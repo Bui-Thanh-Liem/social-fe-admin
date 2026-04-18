@@ -1,11 +1,11 @@
 import { MoreHorizontalIcon } from "lucide-react";
 import { useSearchParams } from "react-router-dom";
 import { useGetMultiUsers } from "~/apis/managements/user.api";
-import { Filter } from "~/components/Filter";
+import { Filter } from "~/components/filter";
 import { Pagination_ } from "~/components/pagination";
-import { ReloadData } from "~/components/ReloadData";
-import { ShowUser } from "~/components/ShowUser";
-import { Table_, type Column } from "~/components/Table_";
+import { ReloadData } from "~/components/reload-data";
+import { ShowUser } from "~/components/show-user";
+import { Table_, type Column } from "~/components/table_";
 import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
@@ -18,9 +18,9 @@ import { cn } from "~/utils/cn.util";
 import { EUserStatus } from "~/shared/enums/status.enum";
 import type { IMediaBare } from "~/shared/interfaces/media.interface";
 import type { IUser, IUserStatus } from "~/shared/interfaces/user.interface";
-import { formatDateToDateVN, formatTimeAgo } from "~/utils/date-time";
-import { ChangeStatus } from "./ChangeStatus";
-import { Remind } from "./Remind";
+import { formatDateToDateVN, formatTimeAgo } from "~/utils/date-time.util";
+import { ChangeStatus } from "./change-status";
+import { Remind } from "./remind";
 
 export function StatusBadge({ status }: Pick<IUserStatus, "status">) {
   return (

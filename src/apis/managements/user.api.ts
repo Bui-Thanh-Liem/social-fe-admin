@@ -1,8 +1,8 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { apiCall } from "../callApi.api";
+import { apiCall } from "../call-api.api";
 import type { IQuery } from "~/shared/interfaces/common/query.interface";
 import type { ResMultiType } from "~/shared/types/response.type";
-import { buildQueryString } from "~/utils/buildQueryString";
+import { buildQueryString } from "~/utils/build-query-string.util";
 import type { IUser } from "~/shared/interfaces/user.interface";
 import type {
   AdminChangeUserStatusDto,

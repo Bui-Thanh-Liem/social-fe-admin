@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useChangeTweetStatus } from "~/apis/managements/tweet.api";
+import { useChangeUserStatus } from "~/apis/managements/user.api";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -21,76 +21,70 @@ import {
   SelectValue,
 } from "~/components/ui/select";
 import {
-  adminChangeTweetStatusDtoSchema,
-  type AdminChangeTweetStatusDto,
-} from "~/shared/dtos/req/tweet.dto";
-import { ETweetStatus } from "~/shared/enums/status.enum";
-import type { ITweet } from "~/shared/interfaces/tweet.interface";
-import { useAdminStore } from "~/stores/useAdminStore";
+  adminChangeUserStatusDtoSchema,
+  type AdminChangeUserStatusDto,
+} from "~/shared/dtos/req/user.dto";
+import { EUserStatus } from "~/shared/enums/status.enum";
+import type { IUser } from "~/shared/interfaces/user.interface";
+import { useAdminStore } from "~/storage/use-admin.storage";
 import { cn } from "~/utils/cn.util";
 
 const manageAccessReasons: Record<
-  ETweetStatus,
+  EUserStatus,
   { reason: string; className: string }
 > = {
-  [ETweetStatus.Ready]: {
-    reason: "Duyệt",
-    className: "text-green-600",
+  [EUserStatus.Active]: {
+    reason: "Hoạt động",
+    className: "text-green-500",
   },
-  [ETweetStatus.Pending]: {
-    reason: "Chờ xử lý",
-    className: "text-yellow-600",
+  [EUserStatus.Block]: {
+    reason: "Khóa",
+    className: "text-red-500",
   },
-  [ETweetStatus.Reject]: {
-    reason: "Từ chối",
-    className: "text-red-600",
+  [EUserStatus.Hidden]: {
+    reason: "Ẩn danh",
+    className: "text-gray-500",
   },
 };
 
-export function ChangeStatus({ record }: { record: ITweet }) {
+export function ChangeStatus({ record }: { record: IUser }) {
   const { admin } = useAdminStore();
   const [open, setOpen] = useState(false);
-  const apiChangeTweetStatus = useChangeTweetStatus();
+  const apiChangeUserStatus = useChangeUserStatus();
 
-  // Khởi tạo form
-  const form = useForm<AdminChangeTweetStatusDto>({
-    resolver: zodResolver(adminChangeTweetStatusDtoSchema),
+  // Khởi tạo form giống hệt bên ChangeStatus của Tweet
+  const form = useForm<AdminChangeUserStatusDto>({
+    resolver: zodResolver(adminChangeUserStatusDtoSchema),
     defaultValues: {
-      status: record.status,
+      status: record.status.status,
       reason: "",
     },
   });
 
   const statusState = form.watch("status");
 
-  // Tự động cập nhật lý do mẫu khi status thay đổi
+  // Cập nhật lý do mẫu khi status trong Select thay đổi
   useEffect(() => {
     if (open) {
       const actionText =
         manageAccessReasons[statusState]?.reason || statusState;
       form.setValue(
         "reason",
-        `${admin?.name || "Admin"} đã đổi trạng thái thành: ${actionText}`,
+        `${admin?.name || "Admin"} thay đổi trạng thái người dùng thành ${actionText}`,
       );
     }
   }, [statusState, open, admin?.name, form]);
 
-  const onSubmit = async (data: AdminChangeTweetStatusDto) => {
-    try {
-      const res = await apiChangeTweetStatus.mutateAsync({
-        _id: record._id,
-        body: {
-          status: data.status,
-          reason: data.reason,
-        },
-      });
+  const onSubmit = async (data: AdminChangeUserStatusDto) => {
+    const res = await apiChangeUserStatus.mutateAsync({
+      _id: record._id,
+      body: {
+        status: data.status,
+        reason: data.reason,
+      },
+    });
 
-      if ([200, 201].includes(res.statusCode)) {
-        setOpen(false);
-      }
-    } catch (error) {
-      console.error("Update status failed:", error);
-    }
+    if ([200, 201].includes(res.statusCode)) setOpen(false);
   };
 
   return (
@@ -111,33 +105,33 @@ export function ChangeStatus({ record }: { record: ITweet }) {
           if (!val) form.reset();
         }}
       >
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent>
           <DialogHeader>
-            <DialogTitle>Cập nhật trạng thái bài viết</DialogTitle>
+            <DialogTitle>Thay đổi trạng thái người dùng</DialogTitle>
           </DialogHeader>
 
-          <form
-            onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-4 pt-4"
-          >
-            {/* Field Status */}
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+            {/* 1. Phần chọn Status tương tự Tweet */}
             <Controller
               name="status"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field>
                   <FieldLabel>Trạng thái mới</FieldLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
+                  <Select
+                    onValueChange={field.onChange}
+                    defaultValue={field.value}
+                  >
                     <SelectTrigger className="w-full">
                       <SelectValue placeholder="Chọn trạng thái" />
                     </SelectTrigger>
                     <SelectContent>
-                      {Object.values(ETweetStatus).map((val) => (
+                      {Object.values(EUserStatus).map((val) => (
                         <SelectItem key={val} value={val}>
                           <span
                             className={cn(manageAccessReasons[val]?.className)}
                           >
-                            {val}
+                            {manageAccessReasons[val]?.reason}
                           </span>
                         </SelectItem>
                       ))}
@@ -150,7 +144,7 @@ export function ChangeStatus({ record }: { record: ITweet }) {
               )}
             />
 
-            {/* Field Reason */}
+            {/* 2. Phần nhập lý do */}
             <Controller
               name="reason"
               control={form.control}
@@ -160,18 +154,14 @@ export function ChangeStatus({ record }: { record: ITweet }) {
                     Lý do
                     <span
                       className={cn(
-                        "ml-2 text-xs font-normal",
+                        "ml-2 text-sm font-normal",
                         manageAccessReasons[statusState]?.className,
                       )}
                     >
                       ({manageAccessReasons[statusState]?.reason})
                     </span>
                   </FieldLabel>
-                  <Input
-                    {...field}
-                    placeholder="Nhập lý do cụ thể..."
-                    className="focus-visible:ring-1"
-                  />
+                  <Input {...field} placeholder="Nhập lý do thay đổi" />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
@@ -179,28 +169,25 @@ export function ChangeStatus({ record }: { record: ITweet }) {
               )}
             />
 
-            <DialogFooter className="gap-2 pt-4">
+            <DialogFooter className="mt-6 gap-2">
               <Button
                 type="button"
-                variant="ghost"
+                variant="outline"
                 onClick={() => setOpen(false)}
               >
                 Huỷ
               </Button>
               <Button
                 type="submit"
-                disabled={apiChangeTweetStatus.isPending}
+                disabled={apiChangeUserStatus.isPending}
                 className={cn(
-                  "min-w-[100px]",
-                  statusState === ETweetStatus.Ready &&
-                    "bg-green-600 hover:bg-green-700",
-                  statusState === ETweetStatus.Reject &&
-                    "bg-red-600 hover:bg-red-700",
-                  statusState === ETweetStatus.Pending &&
-                    "bg-yellow-600 hover:bg-yellow-700",
+                  "text-white min-w-[120px]",
+                  statusState === EUserStatus.Active
+                    ? "bg-green-600 hover:bg-green-700"
+                    : "bg-red-600 hover:bg-red-700",
                 )}
               >
-                {apiChangeTweetStatus.isPending ? "Đang lưu..." : "Xác nhận"}
+                {apiChangeUserStatus.isPending ? "Đang lưu..." : "Cập nhật"}
               </Button>
             </DialogFooter>
           </form>
